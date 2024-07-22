@@ -1,0 +1,23 @@
+{
+  "name": "hono-typia-openapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "miyaji255 <84168445+miyaji255@users.noreply.github.com>",
+  "license": "MIT",
+  "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e",
+  "dependencies": {
+    "typia": "^6.5.4"
+  },
+  "devDependencies": {
+    "@types/ts-expose-internals": "npm:ts-expose-internals@5.5.3",
+    "hono": "^4.5.1",
+    "prettier": "^3.3.3",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.3"
+  }
+}

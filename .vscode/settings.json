@@ -1,0 +1,7 @@
+{
+  "[typescript][json][javascript][jsonc][jsonl]": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
