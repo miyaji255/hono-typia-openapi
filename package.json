@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "run-sample": "tsx scripts/run.ts"
+  },
   "keywords": [],
   "author": "miyaji255 <84168445+miyaji255@users.noreply.github.com>",
   "license": "MIT",

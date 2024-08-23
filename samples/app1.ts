@@ -26,9 +26,15 @@ interface Article {
 
 export type AppType = typeof app;
 export const app = new Hono()
+  .get("/docs", (c) => c.text("Hello, World!", 200))
   .basePath("/api")
+  .get("/docs", (c) => {
+    return c.redirect("/docs");
+  })
   .get(
     "/users",
+    typiaValidator("cookie", typia.createValidate<{ session: string }>()),
+    typiaValidator("header", typia.createValidate<{ authorization: string }>()),
     typiaValidator(
       "query",
       typia.createValidate<{

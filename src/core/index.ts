@@ -1,41 +1,43 @@
 import { JsonApplicationProgrammer } from "typia/lib/programmers/json/JsonApplicationProgrammer";
-import ts from "typescript";
+import * as ts from "typescript";
 import { MetadataCollection } from "typia/lib/factories/MetadataCollection";
 import { MetadataFactory } from "typia/lib/factories/MetadataFactory";
-import path from "path";
-import {} from "hono";
-import { hasElement } from "./utils";
+import * as path from "path";
 import { IJsonApplication } from "typia";
-import { OpenAPISpec, PathItemObject } from "./OpenApiV3";
-import { analyzeParamters } from "./analyze";
-import { normalizePath } from "./normalizePath";
+import { OpenAPISpec, PathItemObject } from "./OpenApiV30";
+import { analyzeParamters } from "./analyzeParameters";
+import { normalizePath } from "../utils/normalizePath";
 
-export function main(program: ts.Program, appTypeName: string) {
+export function main(
+  program: ts.Program,
+  fileName: string,
+  appTypeName: string,
+) {
   const checker = program.getTypeChecker();
 
   let targetNode: ts.TypeAliasDeclaration | undefined;
-  for (const sourceFile of program.getSourceFiles()) {
-    ts.visitEachChild(
-      sourceFile,
-      (node) => {
-        if (
-          ts.isTypeAliasDeclaration(node) &&
-          node.modifiers &&
-          node.modifiers.some(
-            (mod) => mod.kind === ts.SyntaxKind.ExportKeyword,
-          ) &&
-          node.name.text === appTypeName
-        ) {
-          if (targetNode !== undefined)
-            throw new Error("Multiple app types found");
-          targetNode = node;
-        }
+  const sourceFile = program.getSourceFile(fileName);
 
-        return undefined;
-      },
-      undefined,
-    );
-  }
+  ts.visitEachChild(
+    sourceFile,
+    (node) => {
+      if (
+        ts.isTypeAliasDeclaration(node) &&
+        node.modifiers &&
+        node.modifiers.some(
+          (mod) => mod.kind === ts.SyntaxKind.ExportKeyword,
+        ) &&
+        node.name.text === appTypeName
+      ) {
+        if (targetNode !== undefined)
+          throw new Error("Multiple app types found");
+        targetNode = node;
+      }
+
+      return undefined;
+    },
+    undefined,
+  );
   if (targetNode === undefined) throw new Error("App type not found");
 
   return hono(checker, checker.getTypeAtLocation(targetNode.type));
@@ -133,7 +135,7 @@ function hono(
     for (const { name: method } of pathType.getApparentProperties()) {
       // method is `$${LowerCase<string>}`
       const normalizedMethod = method.slice(1);
-      if (!hasElement(Methods, normalizedMethod)) continue;
+      if (!Methods.includes(normalizedMethod)) continue;
       const methodType = checker.getTypeOfPropertyOfType(pathType, method);
       if (methodType === undefined) continue;
 
@@ -209,7 +211,7 @@ function hono(
         )
           throw new Error("Invalid type");
 
-        let status = statusType.isNumberLiteral()
+        const status = statusType.isNumberLiteral()
           ? statusType.value
           : undefined;
         if (
@@ -217,7 +219,22 @@ function hono(
           !outputFormatType.isStringLiteral() &&
           !statusType.isNumberLiteral()
         ) {
-          status = 204;
+          routes[normalizedPath][normalizedMethod].outputs[204] = {
+            mediaType: "",
+          };
+          continue;
+        }
+
+        if (
+          outputFormatType.isStringLiteral() &&
+          outputFormatType.value === "redirect"
+        ) {
+          routes[normalizedPath][normalizedMethod].outputs[
+            status ?? "default"
+          ] = {
+            mediaType: "",
+          };
+          continue;
         }
 
         routes[normalizedPath][normalizedMethod].outputs[status ?? "default"] =
@@ -238,40 +255,45 @@ function hono(
   const paths: Record<string, PathItemObject> = {};
   for (const [path, methods] of Object.entries(routes)) {
     paths[path] = {};
-    for (const [method, ops] of Object.entries(methods)) {
-      if (!hasElement(Methods, method)) continue;
+    for (const [method, { input, outputs }] of Object.entries(methods)) {
+      if (!Methods.includes(method)) continue;
       paths[path][method] = {
-        parameters: ops.input.parameters.map((param) => ({
+        responses: {},
+      };
+      if (input.parameters.length > 0)
+        paths[path][method].parameters = input.parameters.map((param) => ({
           in: param.in,
           name: param.name,
           explode: param.explode,
           required: param.required,
           schema: schema.schemas[param.type]!,
-        })),
-        requestBody: {
+        }));
+
+      if (input.form !== undefined || input.json !== undefined) {
+        paths[path][method].requestBody = {
           content: {},
-        },
-        responses: {},
-      };
-      const requestBody = paths[path][method].requestBody!;
-      if (ops.input.json !== undefined) {
-        requestBody.content[format2mediaType.json] = {
-          schema: schema.schemas[ops.input.json],
         };
-        requestBody.required = true;
-      }
-      if (ops.input.form !== undefined) {
-        requestBody.content[format2mediaType.form] = {
-          schema: schema.schemas[ops.input.form],
-        };
-        requestBody.required = true;
+        const requestBody = paths[path][method].requestBody;
+
+        if (input.json !== undefined) {
+          requestBody.content[format2mediaType.json] = {
+            schema: schema.schemas[input.json],
+          };
+          requestBody.required = true;
+        }
+        if (input.form !== undefined) {
+          requestBody.content[format2mediaType.form] = {
+            schema: schema.schemas[input.form],
+          };
+          requestBody.required = true;
+        }
       }
 
       const responses = paths[path][method].responses!;
-      for (const [status, op] of Object.entries(ops.outputs)) {
+      for (const [status, op] of Object.entries(outputs)) {
         if (op === undefined) continue;
-        if (status === "204") {
-          responses[204] = {
+        if (op.type === undefined) {
+          responses[status] = {
             description: "",
           };
         } else {
@@ -279,7 +301,7 @@ function hono(
             description: "",
             content: {
               [op.mediaType]: {
-                schema: schema.schemas[op.type!],
+                schema: schema.schemas[op.type],
               },
             },
           };

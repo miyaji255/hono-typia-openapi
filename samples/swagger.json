@@ -5,35 +5,36 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/users": {
+    "/docs": {
       "get": {
-        "parameters": [
-          {
-            "in": "query",
-            "name": "name",
-            "explode": true,
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "Hello, World!"
+                  ]
+                }
               }
             }
-          },
-          {
-            "in": "query",
-            "name": "age",
-            "explode": false,
-            "required": false,
-            "schema": {
-              "type": "string",
-              "pattern": "^([+-]?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)$"
-            }
           }
-        ],
-        "requestBody": {
-          "content": {}
-        },
+        }
+      }
+    },
+    "/api/docs": {
+      "get": {
+        "responses": {
+          "302": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
         "responses": {
           "200": {
             "description": "",
@@ -85,20 +86,51 @@
               }
             }
           }
-        }
-      },
-      "post": {
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OmitUseridcreatedAtupdatedAt"
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "explode": true,
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           },
-          "required": true
-        },
+          {
+            "in": "query",
+            "name": "age",
+            "explode": false,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^([+-]?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)$"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "explode": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "session",
+            "explode": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
         "responses": {
           "201": {
             "description": "",
@@ -147,26 +179,21 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OmitUseridcreatedAtupdatedAt"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
     "/api/users/{id}": {
       "get": {
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "explode": false,
-            "required": false,
-            "schema": {
-              "type": "string",
-              "pattern": "^([+-]?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)$"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {}
-        },
         "responses": {
           "200": {
             "description": "",
@@ -215,31 +242,21 @@
               }
             }
           }
-        }
-      },
-      "put": {
+        },
         "parameters": [
           {
             "in": "path",
             "name": "id",
             "explode": false,
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string",
               "pattern": "^([+-]?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)$"
             }
           }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OmitUsercreatedAtupdatedAt"
-              }
-            }
-          },
-          "required": true
-        },
+        ]
+      },
+      "put": {
         "responses": {
           "200": {
             "description": "",
@@ -310,15 +327,13 @@
               }
             }
           }
-        }
-      },
-      "delete": {
+        },
         "parameters": [
           {
             "in": "path",
             "name": "id",
             "explode": false,
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string",
               "pattern": "^([+-]?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)$"
@@ -326,21 +341,38 @@
           }
         ],
         "requestBody": {
-          "content": {}
-        },
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OmitUsercreatedAtupdatedAt"
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "delete": {
         "responses": {
           "204": {
             "description": ""
           }
-        }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "explode": false,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^([+-]?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)$"
+            }
+          }
+        ]
       }
     },
     "/api/articles": {
       "get": {
-        "parameters": [],
-        "requestBody": {
-          "content": {}
-        },
         "responses": {
           "200": {
             "description": "",
@@ -394,17 +426,6 @@
         }
       },
       "post": {
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OmitArticleidcreatedAtupdatedAt"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "201": {
             "description": "",
@@ -452,33 +473,21 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OmitArticleidcreatedAtupdatedAt"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
     "/api/articles/{id}": {
       "put": {
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "explode": false,
-            "required": false,
-            "schema": {
-              "type": "string",
-              "pattern": "^([+-]?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)$"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OmitArticlecreatedAtupdatedAt"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "",
@@ -548,15 +557,13 @@
               }
             }
           }
-        }
-      },
-      "delete": {
+        },
         "parameters": [
           {
             "in": "path",
             "name": "id",
             "explode": false,
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string",
               "pattern": "^([+-]?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)$"
@@ -564,13 +571,34 @@
           }
         ],
         "requestBody": {
-          "content": {}
-        },
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OmitArticlecreatedAtupdatedAt"
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "delete": {
         "responses": {
           "204": {
             "description": ""
           }
-        }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "explode": false,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^([+-]?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)$"
+            }
+          }
+        ]
       }
     }
   },

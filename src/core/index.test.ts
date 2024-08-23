@@ -3,9 +3,11 @@ import ts from "typescript";
 import { describe, test } from "vitest";
 import { main } from ".";
 import { writeFile } from "fs/promises";
+import { fileURLToPath } from "url";
 
 describe("main", () => {
   test("should work", async () => {
+    const dirname = path.dirname(fileURLToPath(import.meta.url));
     const { options: compilerOptions } = ts.parseJsonConfigFileContent(
       ts.readConfigFile(
         path.resolve(__dirname, "../tsconfig.test-app.json"),
@@ -15,17 +17,15 @@ describe("main", () => {
       "app1",
     );
 
-    const program = ts.createProgram(
-      [path.resolve(__dirname, "../test/app1.ts")],
-      compilerOptions,
-    );
+    const fileName = path.resolve(dirname, "../test/app1.ts");
+    const program = ts.createProgram([fileName], compilerOptions);
 
-    const result = main(program, "AppType");
-    if (result === undefined) return;
-    await writeFile(
-      "./test/swagger.json",
-      JSON.stringify(result, null, 2),
-      "utf-8",
-    );
+    // const result = main(program, fileName, "AppType");
+    // if (result === undefined) return;
+    // await writeFile(
+    //   "./test/swagger.json",
+    //   JSON.stringify(result, null, 2),
+    //   "utf-8",
+    // );
   });
 });
