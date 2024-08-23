@@ -1,12 +1,9 @@
-import { JsonApplicationProgrammer } from "typia/lib/programmers/json/JsonApplicationProgrammer";
 import * as ts from "typescript";
-import { MetadataCollection } from "typia/lib/factories/MetadataCollection";
-import { MetadataFactory } from "typia/lib/factories/MetadataFactory";
 import * as path from "path";
-import { IJsonApplication } from "typia";
 import { OpenAPISpec, PathItemObject } from "./OpenApiV30";
 import { analyzeParamters } from "./analyzeParameters";
 import { normalizePath } from "../utils/normalizePath";
+import { createOpenAPISchema } from "./createOpenAPISchema";
 
 export function main(
   program: ts.Program,
@@ -41,27 +38,6 @@ export function main(
   if (targetNode === undefined) throw new Error("App type not found");
 
   return hono(checker, checker.getTypeAtLocation(targetNode.type));
-}
-
-function getOpenApi(checker: ts.TypeChecker, types: ts.Type[]) {
-  const collection = new MetadataCollection({
-    replace: MetadataCollection.replace,
-  });
-
-  const results = types
-    .map((t) =>
-      MetadataFactory.analyze(checker)({
-        escape: true,
-        constant: true,
-        absorb: false,
-        validate: JsonApplicationProgrammer.validate,
-      })(collection)(t),
-    )
-    .filter((r) => r.success);
-
-  return JsonApplicationProgrammer.write("3.0")(
-    results.map((r) => r.data),
-  ) as IJsonApplication<"3.0">;
 }
 
 const Methods = [
@@ -250,7 +226,7 @@ function hono(
     }
   }
 
-  const schema = getOpenApi(checker, types);
+  const schema = createOpenAPISchema("3.0", checker, types);
 
   const paths: Record<string, PathItemObject> = {};
   for (const [path, methods] of Object.entries(routes)) {
