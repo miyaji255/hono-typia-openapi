@@ -8,6 +8,9 @@ import * as path from "path";
 import ts from "typescript";
 import { existsSync } from "fs";
 
+// @ts-ignore
+import packageJson from "../../package.json";
+
 const explorer = cosmiconfig("hto", {
   searchPlaces: [
     "package.json",
@@ -65,7 +68,7 @@ async function main() {
   cli.option("-s, --swagger-path <swaggerPath>", "The path to the output file");
   cli.option("-c, --tsconfig <tsconfig>", "The path to the tsconfig file");
   cli.help();
-  cli.version("0.0.1");
+  cli.version(packageJson.version);
 
   const configFromCli = cli.parse(undefined, { run: true }).options;
   if (configFromCli["help"] || configFromCli["version"]) return;

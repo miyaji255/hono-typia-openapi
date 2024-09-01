@@ -3,8 +3,7 @@
   "compilerOptions": {
     "moduleResolution": "Bundler",
     "module": "ESNext",
-    "outDir": "./dist/esm",
-    "incremental": true
+    "outDir": "./dist/esm"
   },
   "exclude": ["**/*.test.ts", "./src/test/"]
 }

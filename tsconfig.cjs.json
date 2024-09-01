@@ -2,8 +2,7 @@
     "extends": "./tsconfig.base.json",
     "compilerOptions": { 
       "module": "CommonJS",
-      "outDir": "./dist/cjs",
-      "incremental": true
+      "outDir": "./dist/cjs"
     },
     "exclude": ["**/*.test.ts", "./src/test/"]
   }
