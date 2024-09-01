@@ -2,25 +2,41 @@
   "name": "hono-typia-openapi",
   "version": "0.0.0",
   "description": "",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "run-sample": "tsx scripts/run.ts",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs":"tsc -p tsconfig.cjs.json",
-    "watch:esm": "tsc -p tsconfig.esm.json -w",
-    "watch:cjs":"tsc -p tsconfig.cjs.json -w"
+    "build": "pnpm build:esm && pnpm build:cjs",
+    "build:esm": "rimraf ./dist/esm && tspc -p tsconfig.esm.json",
+    "build:cjs": "rimraf ./dist/cjs && tspc -p tsconfig.cjs.json",
+    "watch:esm": "tspc -p tsconfig.esm.json -w",
+    "watch:cjs": "tspc -p tsconfig.cjs.json -w"
   },
-  "keywords": [],
+  "keywords": [
+    "hono",
+    "typia",
+    "openapi",
+    "swagger",
+    "docs",
+    "generator"
+  ],
   "author": "miyaji255 <84168445+miyaji255@users.noreply.github.com>",
   "license": "MIT",
   "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e",
+  "bin": {
+    "hto": "./dist/cjs/cli.js"
+  },
   "exports": {
-    "./*":{
-      "import": "./dist/esm/*.js",
-      "require": "./dist/cjs/*.js"
+    "./*": {
+      "import": "./dist/esm/*",
+      "require": "./dist/cjs/*"
     }
   },
+  "peerDependencies": {
+    "hono": "^4.5.10"
+  },
   "dependencies": {
+    "cac": "^6.7.14",
+    "cosmiconfig": "^9.0.0",
     "typia": "^6.5.4"
   },
   "devDependencies": {
@@ -30,8 +46,10 @@
     "@types/ts-expose-internals": "npm:ts-expose-internals@5.5.3",
     "hono": "^4.5.1",
     "prettier": "^3.3.3",
+    "ts-patch": "^3.2.1",
     "tsx": "^4.16.2",
     "typescript": "^5.5.3",
+    "rimraf": "^6.0.1",
     "vitest": "^2.0.3"
   }
 }

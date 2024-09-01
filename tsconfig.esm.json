@@ -4,8 +4,7 @@
     "moduleResolution": "Bundler",
     "module": "ESNext",
     "outDir": "./dist/esm",
-    "incremental": true,
-    "tsBuildInfoFile": "./dist/esm.tsbuildinfo"
+    "incremental": true
   },
   "exclude": ["**/*.test.ts", "./src/test/"]
 }

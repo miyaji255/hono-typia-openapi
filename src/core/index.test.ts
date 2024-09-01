@@ -1,7 +1,7 @@
 import path from "path";
 import ts from "typescript";
 import { describe, test } from "vitest";
-import { main } from ".";
+import { generateOpenAPIDocs } from ".";
 import { writeFile } from "fs/promises";
 import { fileURLToPath } from "url";
 

@@ -1,20 +1,24 @@
-import * as ts from "typescript";
+import ts from "typescript";
 import * as path from "path";
-import { OpenAPISpec, PathItemObject } from "../openapi/OpenApiV30";
+import {
+  OpenAPISpec as OpenAPISpecV30,
+  PathItemObject,
+} from "../openapi/OpenApiV30";
+import { OpenAPISpec as OpenAPISpecV31 } from "../openapi/OpenApiV31";
 import { normalizePath } from "../utils/normalizePath";
 import { createOpenAPISchema } from "./createOpenAPISchema";
 import { analyzeMethod } from "./analyzeMethod";
 import { format2mediaType, HttpMethod } from "./constants";
+import { HtoOptions } from "./options";
 
-export function main(
+export function generateOpenAPIDocs(
   program: ts.Program,
-  fileName: string,
-  appTypeName: string,
+  options: Required<HtoOptions>,
 ) {
   const checker = program.getTypeChecker();
 
   let targetNode: ts.TypeAliasDeclaration | undefined;
-  const sourceFile = program.getSourceFile(fileName);
+  const sourceFile = program.getSourceFile(options.appFilePath);
 
   ts.visitEachChild(
     sourceFile,
@@ -25,7 +29,7 @@ export function main(
         node.modifiers.some(
           (mod) => mod.kind === ts.SyntaxKind.ExportKeyword,
         ) &&
-        node.name.text === appTypeName
+        node.name.text === options.appTypeName
       ) {
         if (targetNode !== undefined)
           throw new Error("Multiple app types found");
@@ -38,13 +42,18 @@ export function main(
   );
   if (targetNode === undefined) throw new Error("App type not found");
 
-  return hono(checker, checker.getTypeAtLocation(targetNode.type));
+  return analyzeSchema(
+    checker,
+    checker.getTypeAtLocation(targetNode.type),
+    options,
+  );
 }
 
-function hono(
+function analyzeSchema(
   checker: ts.TypeChecker,
   appType: ts.Type,
-): OpenAPISpec | undefined {
+  options: Required<HtoOptions>,
+): OpenAPISpecV30 | OpenAPISpecV31 | undefined {
   if (!isHono(appType)) return;
   const routeType = checker.getTypeArguments(appType as ts.TypeReference)[1]!;
 
@@ -79,7 +88,7 @@ function hono(
     })
     .filter((s) => s !== null);
 
-  const schema = createOpenAPISchema("3.0", checker, types);
+  const schema = createOpenAPISchema(options.openapiVer, checker, types);
 
   const paths: Record<string, PathItemObject> = {};
   for (const { path, methods } of routes) {
@@ -139,14 +148,15 @@ function hono(
     }
   }
   return {
-    openapi: "3.0.0",
+    openapi: options.openapiVer === "3.1" ? "3.1.0" : "3.0.0",
     info: {
-      title: "Hono API",
-      version: "1.0.0",
+      title: options.title,
+      description: options.description,
+      version: options.version,
     },
     paths,
     components: schema.components as any,
-  };
+  } as any;
 }
 
 function isHono(type: ts.Type) {
