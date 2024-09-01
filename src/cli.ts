@@ -59,7 +59,7 @@ async function main() {
     "-n, --app-type-name <appTypeName>",
     "The name of the application of Hono",
     {
-      default: "app",
+      default: "AppType",
     },
   );
   cli.option("-s, --swagger-path <swaggerPath>", "The path to the output file");
@@ -110,7 +110,7 @@ function validateOptions(
   options.openapiVer = options.openapiVer || "3.1";
   options.version = options.version || "1.0.0";
   options.description = options.description || "";
-  options.appTypeName = options.appTypeName || "app";
+  options.appTypeName = options.appTypeName || "AppType";
   options.swaggerPath =
     options.swaggerPath || path.resolve(process.cwd(), "swagger.json");
 }

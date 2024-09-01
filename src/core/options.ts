@@ -22,7 +22,7 @@ export interface HtoOptions {
 
   /**
    * The name of the application of Hono
-   * @default "app"
+   * @default "AppType"
    */
   appTypeName?: string;
 

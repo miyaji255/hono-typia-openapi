@@ -1,6 +1,6 @@
 {
   "name": "hono-typia-openapi",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "type": "commonjs",
   "scripts": {
@@ -25,6 +25,13 @@
   "bin": {
     "hto": "./dist/cjs/cli.js"
   },
+  "files": [
+    "./dist/**/*",
+    "!**/*.tsbuildinfo",
+    "./src/**/*",
+    "!**/*.test.ts",
+    "!./src/test/**/*"
+  ],
   "exports": {
     "./*": {
       "import": "./dist/esm/*",
