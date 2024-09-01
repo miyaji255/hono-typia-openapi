@@ -20,6 +20,7 @@
     "@types/ts-expose-internals": "npm:ts-expose-internals@5.5.3",
     "hono": "^4.5.1",
     "prettier": "^3.3.3",
+    "tsup": "^8.2.4",
     "tsx": "^4.16.2",
     "typescript": "^5.5.3",
     "vitest": "^2.0.3"

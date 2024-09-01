@@ -1,6 +1,6 @@
 import { Hono, Schema } from "hono";
-import { OpenAPISpec as OpenAPISpecV30 } from "../core/OpenApiV30";
-import { OpenAPISpec as OpenAPISpecV31 } from "../core/OpenAPIV31";
+import { OpenAPISpec as OpenAPISpecV30 } from "../openapi/OpenApiV30";
+import { OpenAPISpec as OpenAPISpecV31 } from "../openapi/OpenAPIV31";
 
 type ApplicationInfo<OpenAPIVersion extends "3.0" | "3.1"> =
   OpenAPIVersion extends "3.0"

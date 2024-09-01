@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { createTsProgram, getTypeFromSource } from "../test/utils";
 import { analyzeParamters } from "./analyzeParameters";
 
-describe("analyseParameters", () => {
+describe("analyzeParameters", () => {
   const program = createTsProgram([
     {
       fileName: "test.ts",

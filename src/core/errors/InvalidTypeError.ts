@@ -6,4 +6,14 @@ export class InvalidTypeError extends Error {
   constructor(message?: string, options?: ErrorOptions) {
     super(message, options);
   }
+
+  static throwIfNullOrUndefined<T>(
+    value: T,
+    message?: string,
+    options?: ErrorOptions,
+  ): asserts value is Exclude<T, undefined | null> {
+    if (value === undefined || value === null) {
+      throw new InvalidTypeError(message, options);
+    }
+  }
 }

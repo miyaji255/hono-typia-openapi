@@ -1,9 +1,10 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { OpenAPISpec, PathItemObject } from "./OpenApiV30";
-import { analyzeParamters } from "./analyzeParameters";
+import { OpenAPISpec, PathItemObject } from "../openapi/OpenApiV30";
 import { normalizePath } from "../utils/normalizePath";
 import { createOpenAPISchema } from "./createOpenAPISchema";
+import { analyzeMethod, MethodSchema } from "./analyzeMethod";
+import { format2mediaType, HttpMethod } from "./constants";
 
 export function main(
   program: ts.Program,
@@ -40,26 +41,6 @@ export function main(
   return hono(checker, checker.getTypeAtLocation(targetNode.type));
 }
 
-const Methods = [
-  "get",
-  "post",
-  "put",
-  "patch",
-  "delete",
-  "head",
-  "options",
-  "trace",
-] as const;
-type Method = (typeof Methods)[number];
-const format2mediaType = {
-  json: "application/json",
-  xml: "application/xml",
-  html: "text/html",
-  text: "text/plain",
-  form: "application/x-www-form-urlencoded",
-  multipart: "multipart/form-data",
-} as const;
-
 function hono(
   checker: ts.TypeChecker,
   appType: ts.Type,
@@ -68,171 +49,43 @@ function hono(
   const routeType = checker.getTypeArguments(appType as ts.TypeReference)[1]!;
 
   const types: ts.Type[] = [];
-  const routes: Record<
-    string,
-    Partial<
-      Record<
-        Method,
-        {
-          input: {
-            json?: number;
-            form?: number;
-            parameters: {
-              in: "query" | "path" | "header" | "cookie";
-              name: string;
-              explode: boolean;
-              type: number;
-              required: boolean;
-            }[];
-          };
-          /** Key: Status Code */
-          outputs: Partial<
-            Record<
-              number | "default",
-              {
-                type?: number;
-                mediaType:
-                  | (typeof format2mediaType)[keyof typeof format2mediaType]
-                  | "";
-              }
-            >
-          >;
-        }
-      >
-    >
-  > = {};
-  for (const { name: path } of routeType.getApparentProperties()) {
-    const pathType = checker.getTypeOfPropertyOfType(routeType, path);
-    if (pathType === undefined) continue;
+  const routes = routeType
+    .getApparentProperties()
+    .map(({ name: path }) => {
+      const pathType = checker.getTypeOfPropertyOfType(routeType, path);
+      if (pathType === undefined) return null;
 
-    const normalizedPath = normalizePath(path);
+      const normalizedPath = normalizePath(path);
+      return {
+        path: normalizedPath,
+        methods: pathType
+          .getApparentProperties()
+          .map(({ name: method }) => {
+            const normalizedMethod = method.slice(1);
+            const methodType = checker.getTypeOfPropertyOfType(
+              pathType,
+              method,
+            );
+            if (
+              !HttpMethod.includes(normalizedMethod) ||
+              methodType === undefined
+            )
+              return null;
 
-    routes[normalizedPath] = {};
-    for (const { name: method } of pathType.getApparentProperties()) {
-      // method is `$${LowerCase<string>}`
-      const normalizedMethod = method.slice(1);
-      if (!Methods.includes(normalizedMethod)) continue;
-      const methodType = checker.getTypeOfPropertyOfType(pathType, method);
-      if (methodType === undefined) continue;
-
-      const responseInfo = methodType.isUnion()
-        ? methodType.types
-        : [methodType];
-      // inputは共通のはず
-      const inputType = checker.getTypeOfPropertyOfType(
-        responseInfo[0]!,
-        "input",
-      );
-      if (inputType === undefined) throw new Error("Invalid type");
-
-      const inputJsonType = checker.getTypeOfPropertyOfType(inputType, "json");
-      const inputFormType = checker.getTypeOfPropertyOfType(inputType, "form");
-      const inputQueryType = checker.getTypeOfPropertyOfType(
-        inputType,
-        "query",
-      );
-      const inputPramType = checker.getTypeOfPropertyOfType(inputType, "param");
-      const inputHeaderType = checker.getTypeOfPropertyOfType(
-        inputType,
-        "header",
-      );
-      const inputCookieType = checker.getTypeOfPropertyOfType(
-        inputType,
-        "cookie",
-      );
-
-      routes[normalizedPath][normalizedMethod] = {
-        input: {
-          json:
-            inputJsonType === undefined
-              ? undefined
-              : types.push(inputJsonType) - 1,
-          form:
-            inputFormType === undefined
-              ? undefined
-              : types.push(inputFormType) - 1,
-          parameters: analyzeParamters(checker, {
-            query: inputQueryType,
-            param: inputPramType,
-            header: inputHeaderType,
-            cookie: inputCookieType,
-          }).map((param) => ({
-            in: param.in,
-            name: param.name,
-            explode: param.explode,
-            type: types.push(param.type) - 1,
-            required: param.required,
-          })),
-        },
-        outputs: {},
+            return analyzeMethod(checker, normalizedMethod, methodType, types);
+          })
+          .filter((s) => s !== null),
       };
-
-      for (const methodType of responseInfo) {
-        const outputType = checker.getTypeOfPropertyOfType(
-          methodType,
-          "output",
-        );
-        const outputFormatType = checker.getTypeOfPropertyOfType(
-          methodType,
-          "outputFormat",
-        );
-        const statusType = checker.getTypeOfPropertyOfType(
-          methodType,
-          "status",
-        );
-        if (
-          outputType === undefined ||
-          outputFormatType === undefined ||
-          statusType === undefined
-        )
-          throw new Error("Invalid type");
-
-        const status = statusType.isNumberLiteral()
-          ? statusType.value
-          : undefined;
-        if (
-          outputType.getApparentProperties().length === 0 &&
-          !outputFormatType.isStringLiteral() &&
-          !statusType.isNumberLiteral()
-        ) {
-          routes[normalizedPath][normalizedMethod].outputs[204] = {
-            mediaType: "",
-          };
-          continue;
-        }
-
-        if (
-          outputFormatType.isStringLiteral() &&
-          outputFormatType.value === "redirect"
-        ) {
-          routes[normalizedPath][normalizedMethod].outputs[
-            status ?? "default"
-          ] = {
-            mediaType: "",
-          };
-          continue;
-        }
-
-        routes[normalizedPath][normalizedMethod].outputs[status ?? "default"] =
-          {
-            type: types.push(outputType) - 1,
-            mediaType: outputFormatType.isStringLiteral()
-              ? (format2mediaType[
-                  outputFormatType.value as keyof typeof format2mediaType
-                ] ?? outputFormatType.value)
-              : "text/plain",
-          };
-      }
-    }
-  }
+    })
+    .filter((s) => s !== null);
 
   const schema = createOpenAPISchema("3.0", checker, types);
 
   const paths: Record<string, PathItemObject> = {};
-  for (const [path, methods] of Object.entries(routes)) {
+  for (const { path, methods } of routes) {
     paths[path] = {};
-    for (const [method, { input, outputs }] of Object.entries(methods)) {
-      if (!Methods.includes(method)) continue;
+    for (const { method, input, outputs } of methods) {
+      if (!HttpMethod.includes(method)) continue;
       paths[path][method] = {
         responses: {},
       };

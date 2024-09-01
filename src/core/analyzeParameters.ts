@@ -45,7 +45,7 @@ function createPramterObject(
       type,
       propertySymbol.name,
     );
-    if (elementType === undefined) throw new InvalidTypeError("Invalid type");
+    InvalidTypeError.throwIfNullOrUndefined(elementType, "Invalid type");
 
     const { type: exactType, isArray } = getExactType(checker, elementType);
     const isOptional = isOptionalProperty(propertySymbol);
