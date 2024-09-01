@@ -30,19 +30,19 @@ class ApplicationSchema<
   }
 }
 
-const app = new Hono().get("/", (c) => {
-  return c.json({ message: "Hello, World!" }, 200);
-});
+// const app = new Hono().get("/", (c) => {
+//   return c.json({ message: "Hello, World!" }, 200);
+// });
 
-type App = Application<
-  typeof app,
-  "3.0",
-  {
-    openapi: {
-      info: {
-        title: "Hono API";
-        version: "1.0.0";
-      };
-    };
-  }
->;
+// type App = Application<
+//   typeof app,
+//   "3.0",
+//   {
+//     openapi: {
+//       info: {
+//         title: "Hono API";
+//         version: "1.0.0";
+//       };
+//     };
+//   }
+// >;

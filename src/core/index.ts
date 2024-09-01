@@ -3,7 +3,7 @@ import * as path from "path";
 import { OpenAPISpec, PathItemObject } from "../openapi/OpenApiV30";
 import { normalizePath } from "../utils/normalizePath";
 import { createOpenAPISchema } from "./createOpenAPISchema";
-import { analyzeMethod, MethodSchema } from "./analyzeMethod";
+import { analyzeMethod } from "./analyzeMethod";
 import { format2mediaType, HttpMethod } from "./constants";
 
 export function main(

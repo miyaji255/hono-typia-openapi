@@ -4,12 +4,22 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "run-sample": "tsx scripts/run.ts"
+    "run-sample": "tsx scripts/run.ts",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs":"tsc -p tsconfig.cjs.json",
+    "watch:esm": "tsc -p tsconfig.esm.json -w",
+    "watch:cjs":"tsc -p tsconfig.cjs.json -w"
   },
   "keywords": [],
   "author": "miyaji255 <84168445+miyaji255@users.noreply.github.com>",
   "license": "MIT",
   "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e",
+  "exports": {
+    "./*":{
+      "import": "./dist/esm/*.js",
+      "require": "./dist/cjs/*.js"
+    }
+  },
   "dependencies": {
     "typia": "^6.5.4"
   },
@@ -20,7 +30,6 @@
     "@types/ts-expose-internals": "npm:ts-expose-internals@5.5.3",
     "hono": "^4.5.1",
     "prettier": "^3.3.3",
-    "tsup": "^8.2.4",
     "tsx": "^4.16.2",
     "typescript": "^5.5.3",
     "vitest": "^2.0.3"

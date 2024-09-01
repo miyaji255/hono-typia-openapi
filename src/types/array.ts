@@ -1,5 +1,7 @@
+/** @internal */
 type Expand<T, U> = T extends U ? U : never;
 
+/** @internal */
 type ExpandPrimitive<T> = T extends T
   ?
       | Expand<T, string>
@@ -11,6 +13,7 @@ type ExpandPrimitive<T> = T extends T
       | Expand<T, null>
   : never;
 
+/** @internal */
 interface Array<T> {
   /**
    * Determines whether an array includes a certain element, returning true or false as appropriate.
@@ -23,6 +26,7 @@ interface Array<T> {
   ): searchElement is T;
 }
 
+/** @internal */
 interface ReadonlyArray<T> {
   /**
    * Determines whether an array includes a certain element, returning true or false as appropriate.
