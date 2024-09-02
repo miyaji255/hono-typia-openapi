@@ -1,6 +1,6 @@
 import ts from "typescript";
 import * as path from "path";
-import { generateOpenAPIDocs as coreMain } from "../src/core/index.js";
+import { generateOpenAPIDocs } from "../src/core/index.js";
 import { writeFile } from "fs/promises";
 
 async function main() {
@@ -16,7 +16,16 @@ async function main() {
   const fileName = path.resolve(__dirname, "../samples/app1.ts");
   const program = ts.createProgram([fileName], compilerOptions);
 
-  const result = coreMain(program, fileName, "AppType");
+  const result = generateOpenAPIDocs(program, {
+    title: "app",
+    version: "1.0.0",
+    description: "",
+    openapiVer: "3.1",
+    tsconfig: path.resolve(__dirname, "../tsconfig.test-app.json"),
+    swaggerPath: path.resolve(__dirname, "../samples/swagger.json"),
+    appFilePath: fileName,
+    appTypeName: "AppType",
+  });
   if (result !== undefined)
     await writeFile(
       path.resolve(__dirname, "../samples/swagger.json"),

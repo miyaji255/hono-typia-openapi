@@ -1,8 +1,7 @@
 import path from "path";
 import ts from "typescript";
-import { describe, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { generateOpenAPIDocs } from "./index.js";
-import { writeFile } from "fs/promises";
 import { fileURLToPath } from "url";
 
 describe("main", () => {
@@ -17,15 +16,20 @@ describe("main", () => {
       "app1",
     );
 
-    const fileName = path.resolve(dirname, "../test/app1.ts");
+    const fileName = path.resolve(dirname, "../../samples/app1.ts");
     const program = ts.createProgram([fileName], compilerOptions);
 
-    // const result = main(program, fileName, "AppType");
-    // if (result === undefined) return;
-    // await writeFile(
-    //   "./test/swagger.json",
-    //   JSON.stringify(result, null, 2),
-    //   "utf-8",
-    // );
+    const result = generateOpenAPIDocs(program, {
+      title: "app",
+      version: "1.0.0",
+      description: "",
+      openapiVer: "3.1",
+      tsconfig: path.resolve(__dirname, "../tsconfig.test-app.json"),
+      swaggerPath: path.resolve(__dirname, "../../samples/swagger.json"),
+      appFilePath: fileName,
+      appTypeName: "AppType",
+    });
+
+    expect(JSON.stringify(result)).toMatchSnapshot();
   });
 });

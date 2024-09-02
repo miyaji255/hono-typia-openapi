@@ -10,6 +10,7 @@
     "build:cjs": "rimraf ./dist/cjs && tspc -p tsconfig.cjs.json",
     "watch:esm": "tspc -p tsconfig.esm.json -w",
     "watch:cjs": "tspc -p tsconfig.cjs.json -w",
+    "test": "vitest --run",
     "lint": "prettier --check .",
     "fmt": "prettier --write ."
   },
