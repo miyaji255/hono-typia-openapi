@@ -5,7 +5,10 @@ import { generateOpenAPIDocs } from "./index.js";
 import { fileURLToPath } from "url";
 
 describe("main", () => {
-  test("should work", async () => {
+  test.each([
+    "app1",
+    // "app2" typia does not support pertternProperties, so this test will fail
+  ])("should work", async (sampleName) => {
     const dirname = path.dirname(fileURLToPath(import.meta.url));
     const { options: compilerOptions } = ts.parseJsonConfigFileContent(
       ts.readConfigFile(
@@ -16,7 +19,7 @@ describe("main", () => {
       "app1",
     );
 
-    const fileName = path.resolve(dirname, "../../samples/app1.ts");
+    const fileName = path.resolve(dirname, `../../samples/${sampleName}.ts`);
     const program = ts.createProgram([fileName], compilerOptions);
 
     const result = generateOpenAPIDocs(program, {
@@ -25,7 +28,10 @@ describe("main", () => {
       description: "",
       openapiVer: "3.1",
       tsconfig: path.resolve(__dirname, "../tsconfig.test-app.json"),
-      swaggerPath: path.resolve(__dirname, "../../samples/swagger.json"),
+      swaggerPath: path.resolve(
+        __dirname,
+        `../../samples/${sampleName}-docs.json`,
+      ),
       appFilePath: fileName,
       appTypeName: "AppType",
     });

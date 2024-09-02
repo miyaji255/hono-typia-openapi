@@ -24,6 +24,12 @@
   ],
   "author": "miyaji255 <84168445+miyaji255@users.noreply.github.com>",
   "license": "MIT",
+  "repository": {
+    "url": "https://github.com/miyaji255/hono-typia-openapi"
+  },
+  "bugs": {
+    "url": "https://github.com/miyaji255/hono-typia-openapi/issues"
+  },
   "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e",
   "bin": {
     "hto": "./dist/cjs/cli.js"

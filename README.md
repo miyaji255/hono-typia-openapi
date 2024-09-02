@@ -105,14 +105,14 @@ interface HelloRequest {
 
 const app = new Hono()
   .get("/hello", (c) => {
-    return c.json(200, { message: "Hello, World!" });
+    return c.json({ message: "Hello, World!" }, 200);
   })
   .post(
     "/hello",
     typiaValidator("json", typia.createValidator<HelloRequest>()),
     (c) => {
       const { name } = c.req.valid("json");
-      return c.json(200, { message: `Hello, ${name}!` });
+      return c.json({ message: `Hello, ${name}!` }, 200);
     },
   );
 
@@ -120,7 +120,7 @@ const app = new Hono()
 if (process.env.NODE_ENV === "development") {
   docs = (await import("fs/promises")).readFile("./swagger.json", "utf-8");
   app
-    .get("docs", (c) => c.json(200, JSON.parse(docs)))
+    .get("docs", (c) => c.json(JSON.parse(docs), 200))
     .get("docs/ui", swaggerUI({ url: "/docs" }));
 }
 

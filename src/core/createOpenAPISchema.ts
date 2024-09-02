@@ -23,7 +23,15 @@ export function createOpenAPISchema<Version extends "3.0" | "3.1">(
     })(collection)(t),
   );
   if (results.some((r) => !r.success)) {
-    throw new Error("Failed to analyze metadata");
+    console.log(results.filter((r) => !r.success)[0]?.errors[0]?.explore);
+    throw new Error(
+      "Failed to analyze metadata." +
+        results
+          .filter((r) => !r.success)
+          .flatMap((r) => r.errors)
+          .flatMap((e) => e.messages)
+          .join("\n  "),
+    );
   }
 
   return JsonApplicationProgrammer.write(openapiVersion)(

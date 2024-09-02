@@ -28,7 +28,7 @@ async function main() {
   });
   if (result !== undefined)
     await writeFile(
-      path.resolve(__dirname, "../samples/swagger.json"),
+      path.resolve(__dirname, "../samples/app1-docs.json"),
       JSON.stringify(result, null, 2),
       "utf-8",
     );
