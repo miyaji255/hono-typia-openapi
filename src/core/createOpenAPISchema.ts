@@ -1,9 +1,9 @@
 import ts from "typescript";
 import { IJsonApplication } from "typia";
-import { MetadataCollection } from "typia/lib/factories/MetadataCollection";
-import { MetadataFactory } from "typia/lib/factories/MetadataFactory";
-import { JsonApplicationProgrammer } from "typia/lib/programmers/json/JsonApplicationProgrammer";
-import type { Metadata } from "typia/lib/schemas/metadata/Metadata";
+import { MetadataCollection } from "typia/lib/factories/MetadataCollection.js";
+import { MetadataFactory } from "typia/lib/factories/MetadataFactory.js";
+import { JsonApplicationProgrammer } from "typia/lib/programmers/json/JsonApplicationProgrammer.js";
+import type { Metadata } from "typia/lib/schemas/metadata/Metadata.js";
 
 export function createOpenAPISchema<Version extends "3.0" | "3.1">(
   openapiVersion: Version,

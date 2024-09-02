@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import ts from "typescript";
 import * as path from "path";
 
 const { options: compilerOptions } = ts.parseJsonConfigFileContent(

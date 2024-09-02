@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { createTsProgram, getTypeFromSource } from "../test/utils";
-import { analyzeParamters } from "./analyzeParameters";
+import { createTsProgram, getTypeFromSource } from "../test/utils.js";
+import { analyzeParamters } from "./analyzeParameters.js";
 
 describe("analyzeParameters", () => {
   const program = createTsProgram([

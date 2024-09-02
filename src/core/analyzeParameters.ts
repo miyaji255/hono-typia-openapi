@@ -1,6 +1,6 @@
-import * as ts from "typescript";
-import { isOptionalProperty } from "../utils/typescript";
-import { InvalidTypeError } from "./errors/InvalidTypeError";
+import ts from "typescript";
+import { isOptionalProperty } from "../utils/typescript.js";
+import { InvalidTypeError } from "./errors/InvalidTypeError.js";
 
 export interface ParameterSchema {
   in: "query" | "path" | "header" | "cookie";

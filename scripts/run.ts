@@ -1,6 +1,6 @@
 import ts from "typescript";
 import * as path from "path";
-import { generateOpenAPIDocs as coreMain } from "../src/core";
+import { generateOpenAPIDocs as coreMain } from "../src/core/index.js";
 import { writeFile } from "fs/promises";
 
 async function main() {

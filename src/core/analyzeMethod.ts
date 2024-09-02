@@ -4,9 +4,9 @@ import {
   HonoFormats,
   HttpMethod,
   MediaType,
-} from "./constants";
-import { InvalidTypeError } from "./errors/InvalidTypeError";
-import { analyzeParamters } from "./analyzeParameters";
+} from "./constants.js";
+import { InvalidTypeError } from "./errors/InvalidTypeError.js";
+import { analyzeParamters } from "./analyzeParameters.js";
 
 export interface MethodSchema {
   method: HttpMethod;

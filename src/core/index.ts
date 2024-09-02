@@ -3,13 +3,13 @@ import * as path from "path";
 import {
   OpenAPISpec as OpenAPISpecV30,
   PathItemObject,
-} from "../openapi/OpenApiV30";
-import { OpenAPISpec as OpenAPISpecV31 } from "../openapi/OpenApiV31";
-import { normalizePath } from "../utils/normalizePath";
-import { createOpenAPISchema } from "./createOpenAPISchema";
-import { analyzeMethod } from "./analyzeMethod";
-import { format2mediaType, HttpMethod } from "./constants";
-import { HtoOptions } from "./options";
+} from "../openapi/OpenApiV30.js";
+import { OpenAPISpec as OpenAPISpecV31 } from "../openapi/OpenApiV31.js";
+import { normalizePath } from "../utils/normalizePath.js";
+import { createOpenAPISchema } from "./createOpenAPISchema.js";
+import { analyzeMethod } from "./analyzeMethod.js";
+import { format2mediaType, HttpMethod } from "./constants.js";
+import { HtoOptions } from "./options.js";
 
 export function generateOpenAPIDocs(
   program: ts.Program,

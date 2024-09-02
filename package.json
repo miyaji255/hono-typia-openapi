@@ -2,7 +2,7 @@
   "name": "hono-typia-openapi",
   "version": "0.0.2",
   "description": "",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "run-sample": "tsx scripts/run.ts",
     "build": "pnpm build:esm && pnpm build:cjs",

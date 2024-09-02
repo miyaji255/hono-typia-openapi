@@ -1,16 +1,13 @@
 import { cosmiconfig } from "cosmiconfig";
-
 import typia from "typia";
-import { HtoOptions } from "./core/options";
-import { HtoOptions as HtoConfigOptions } from "./config";
-import cac from "cac";
-import { generateOpenAPIDocs } from "./core";
+import { HtoOptions } from "./core/options.js";
+import { HtoOptions as HtoConfigOptions } from "./config.js";
+import { cac } from "cac";
+import { generateOpenAPIDocs } from "./core/index.js";
 import * as path from "path";
 import ts from "typescript";
 import { existsSync } from "fs";
-
-// @ts-ignore
-import packageJson from "../../package.json";
+import { version as packageVersion } from "./meta.js";
 
 const explorer = cosmiconfig("hto", {
   searchPlaces: [
@@ -69,7 +66,8 @@ async function main() {
   cli.option("-s, --swagger-path <swaggerPath>", "The path to the output file");
   cli.option("-c, --tsconfig <tsconfig>", "The path to the tsconfig file");
   cli.help();
-  cli.version(packageJson.version);
+
+  cli.version(packageVersion);
 
   const configFromCli = cli.parse(undefined, { run: true }).options;
   if (configFromCli["help"] || configFromCli["version"]) return;
@@ -86,14 +84,14 @@ async function main() {
   config.swaggerPath = configFromCli["swaggerPath"]
     ? path.resolve(process.cwd(), configFromCli["swaggerPath"])
     : config.swaggerPath;
-  config.tsconfig = configFromCli["tsconfig"]
-    ? path.resolve(process.cwd(), configFromCli["tsconfig"])
-    : config.tsconfig;
+  config.tsconfig =
+    (configFromCli["tsconfig"]
+      ? path.resolve(process.cwd(), configFromCli["tsconfig"])
+      : config.tsconfig) ?? searchTsConfig();
   validateOptions(config);
 
   const { options: compilerOptions } = ts.parseJsonConfigFileContent(
-    ts.readConfigFile(config.tsconfig || searchTsConfig(), ts.sys.readFile)
-      .config,
+    ts.readConfigFile(config.tsconfig, ts.sys.readFile).config,
     ts.sys,
     config.title,
   );
@@ -101,6 +99,7 @@ async function main() {
 
   const openAPIDocs = generateOpenAPIDocs(program, config);
   ts.sys.writeFile(config.swaggerPath, JSON.stringify(openAPIDocs));
+  console.log("OpenAPI docs generated successfully");
 }
 
 main().catch(console.error);

@@ -1,8 +1,9 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "moduleResolution": "Bundler",
-    "module": "ESNext",
+    "moduleResolution": "Node16",
+    // `type` in the package.json is `module`, so tsc emits `ES2020`
+    "module": "Node16",
     "outDir": "./dist/esm"
   },
   "exclude": ["**/*.test.ts", "./src/test/"]
