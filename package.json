@@ -26,11 +26,10 @@
     "hto": "./dist/cjs/cli.js"
   },
   "files": [
-    "./dist/**/*",
-    "!**/*.tsbuildinfo",
-    "./src/**/*",
-    "!**/*.test.ts",
-    "!./src/test/**/*"
+    "dist/**/*",
+    "src/**/*",
+    "!*.test.ts",
+    "!src/test/**/*"
   ],
   "exports": {
     "./*": {
@@ -39,14 +38,15 @@
     }
   },
   "peerDependencies": {
-    "hono": "^4.5.10"
+    "hono": "^4.5.1D",
+    "typia":"^6.5.4"
   },
   "dependencies": {
     "cac": "^6.7.14",
-    "cosmiconfig": "^9.0.0",
-    "typia": "^6.5.4"
+    "cosmiconfig": "^9.0.0"
   },
   "devDependencies": {
+    "typia": "^6.5.4",
     "@hono/typia-validator": "^0.0.5",
     "@samchon/openapi": "^0.4.2",
     "@types/node": "^20.14.11",
