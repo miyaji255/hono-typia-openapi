@@ -53,7 +53,7 @@ You can specify the following options:
 - -t, --title &lt;title> The title of the application
 - -o, --openapi-ver &lt;openapiVer> The version of the OpenAPI specification (default: 3.1)
 - -d, --description &lt;description> The description of the API
-- -v, --version &lt;version> The version of the API
+- --app-version &lt;version> The version of the API
 - -a, --app-file-path &lt;appFilePath> The path to the Hono app file
 - -n, --app-type-name &lt;appTypeName> The name of the application of Hono (default: AppType)
 - -s, --swagger-path &lt;swaggerPath> The path to the output file

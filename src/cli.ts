@@ -2,6 +2,7 @@ import { cosmiconfig } from "cosmiconfig";
 
 import typia from "typia";
 import { HtoOptions } from "./core/options";
+import { HtoOptions as HtoConfigOptions } from "./config";
 import cac from "cac";
 import { generateOpenAPIDocs } from "./core";
 import * as path from "path";
@@ -30,7 +31,7 @@ async function main() {
   const config: Partial<HtoOptions> =
     result === null || result.isEmpty
       ? {}
-      : typia.assert<HtoOptions>(result.config);
+      : typia.assert<HtoConfigOptions>(result.config);
 
   if (result !== null) {
     const dirname = path.dirname(result.filepath);
@@ -53,7 +54,7 @@ async function main() {
     },
   );
   cli.option("-d, --description <description>", "The description of the API");
-  cli.option("-v, --version <version>", "The version of the API");
+  cli.option("--app-version <version>", "The version of the API");
   cli.option(
     "-a, --app-file-path <appFilePath>",
     "The path to the Hono app file",
@@ -75,8 +76,9 @@ async function main() {
 
   config.title = configFromCli["title"] || config.title;
   config.openapiVer = configFromCli["openapiVer"] || config.openapiVer;
-  config.description = configFromCli["description"] || config.description;
-  config.version = configFromCli["version"] || config.version;
+  config.description =
+    (configFromCli["description"] || config.description) ?? "";
+  config.version = configFromCli["appVersion"] || config.version;
   config.appFilePath = configFromCli["appFilePath"]
     ? path.resolve(process.cwd(), configFromCli["appFilePath"])
     : config.appFilePath;
@@ -110,12 +112,7 @@ function validateOptions(
   if (options.appFilePath === undefined)
     throw new Error("App file path is required");
 
-  options.openapiVer = options.openapiVer || "3.1";
-  options.version = options.version || "1.0.0";
-  options.description = options.description || "";
-  options.appTypeName = options.appTypeName || "AppType";
-  options.swaggerPath =
-    options.swaggerPath || path.resolve(process.cwd(), "swagger.json");
+  typia.assert<HtoOptions>(options);
 }
 
 function searchTsConfig(): string {
