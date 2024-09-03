@@ -8,7 +8,7 @@ describe("main", () => {
   test.each([
     "app1",
     // "app2" typia does not support pertternProperties, so this test will fail
-  ])("should work", async (sampleName) => {
+  ])("should work %s", async (sampleName) => {
     const dirname = path.dirname(fileURLToPath(import.meta.url));
     const { options: compilerOptions } = ts.parseJsonConfigFileContent(
       ts.readConfigFile(

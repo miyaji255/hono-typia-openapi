@@ -1,4 +1,4 @@
-import { HtoOptions } from "./core/options.js";
+import type { HtoOptions } from "./core/options.js";
 
 export interface HtoCliOptions
   extends Pick<HtoOptions, "title" | "appFile">,

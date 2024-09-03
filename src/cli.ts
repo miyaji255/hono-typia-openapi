@@ -1,7 +1,6 @@
 import { cosmiconfig } from "cosmiconfig";
 import typia from "typia";
-import { HtoOptions } from "./core/options.js";
-import { HtoCliOptions } from "./config.js";
+import type { HtoCliOptions } from "./config.js";
 import { cac } from "cac";
 import { generateOpenAPIDocs } from "./core/index.js";
 import * as path from "path";

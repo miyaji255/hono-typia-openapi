@@ -9,12 +9,9 @@ import { normalizePath } from "../utils/normalizePath.js";
 import { createOpenAPISchema } from "./createOpenAPISchema.js";
 import { analyzeMethod } from "./analyzeMethod.js";
 import { format2mediaType, HttpMethod } from "./constants.js";
-import { HtoCliOptions } from "./options.js";
+import type { HtoOptions } from "./options.js";
 
-export function generateOpenAPIDocs(
-  program: ts.Program,
-  options: Required<HtoCliOptions>,
-) {
+export function generateOpenAPIDocs(program: ts.Program, options: HtoOptions) {
   const checker = program.getTypeChecker();
 
   let targetNode: ts.TypeAliasDeclaration | undefined;
@@ -52,7 +49,7 @@ export function generateOpenAPIDocs(
 function analyzeSchema(
   checker: ts.TypeChecker,
   appType: ts.Type,
-  options: Required<HtoCliOptions>,
+  options: HtoOptions,
 ): OpenAPISpecV30 | OpenAPISpecV31 | undefined {
   if (!isHono(appType)) return;
   const routeType = checker.getTypeArguments(appType as ts.TypeReference)[1]!;

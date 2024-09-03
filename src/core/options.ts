@@ -32,15 +32,3 @@ export interface HtoOptions {
    */
   appType: string;
 }
-
-export interface HtoCliOptions extends HtoOptions {
-  /**
-   * The path to the output swagger file.
-   */
-  output: string;
-
-  /**
-   * The path to the tsconfig file.
-   */
-  tsconfig: string;
-}
