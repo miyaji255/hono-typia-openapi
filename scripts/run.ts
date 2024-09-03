@@ -20,11 +20,9 @@ async function main() {
     title: "app",
     version: "1.0.0",
     description: "",
-    openapiVer: "3.1",
-    tsconfig: path.resolve(__dirname, "../tsconfig.test-app.json"),
-    swaggerPath: path.resolve(__dirname, "../samples/swagger.json"),
-    appFilePath: fileName,
-    appTypeName: "AppType",
+    openapi: "3.1",
+    appFile: fileName,
+    appType: "AppType",
   });
   if (result !== undefined)
     await writeFile(

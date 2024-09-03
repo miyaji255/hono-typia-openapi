@@ -9,16 +9,16 @@ import { normalizePath } from "../utils/normalizePath.js";
 import { createOpenAPISchema } from "./createOpenAPISchema.js";
 import { analyzeMethod } from "./analyzeMethod.js";
 import { format2mediaType, HttpMethod } from "./constants.js";
-import { HtoOptions } from "./options.js";
+import { HtoCliOptions } from "./options.js";
 
 export function generateOpenAPIDocs(
   program: ts.Program,
-  options: Required<HtoOptions>,
+  options: Required<HtoCliOptions>,
 ) {
   const checker = program.getTypeChecker();
 
   let targetNode: ts.TypeAliasDeclaration | undefined;
-  const sourceFile = program.getSourceFile(options.appFilePath);
+  const sourceFile = program.getSourceFile(options.appFile);
 
   ts.visitEachChild(
     sourceFile,
@@ -29,7 +29,7 @@ export function generateOpenAPIDocs(
         node.modifiers.some(
           (mod) => mod.kind === ts.SyntaxKind.ExportKeyword,
         ) &&
-        node.name.text === options.appTypeName
+        node.name.text === options.appType
       ) {
         if (targetNode !== undefined)
           throw new Error("Multiple app types found");
@@ -52,7 +52,7 @@ export function generateOpenAPIDocs(
 function analyzeSchema(
   checker: ts.TypeChecker,
   appType: ts.Type,
-  options: Required<HtoOptions>,
+  options: Required<HtoCliOptions>,
 ): OpenAPISpecV30 | OpenAPISpecV31 | undefined {
   if (!isHono(appType)) return;
   const routeType = checker.getTypeArguments(appType as ts.TypeReference)[1]!;
@@ -88,7 +88,7 @@ function analyzeSchema(
     })
     .filter((s) => s !== null);
 
-  const schema = createOpenAPISchema(options.openapiVer, checker, types);
+  const schema = createOpenAPISchema(options.openapi, checker, types);
 
   const paths: Record<string, PathItemObject> = {};
   for (const { path, methods } of routes) {
@@ -148,7 +148,7 @@ function analyzeSchema(
     }
   }
   return {
-    openapi: options.openapiVer === "3.1" ? "3.1.0" : "3.0.0",
+    openapi: options.openapi === "3.1" ? "3.1.0" : "3.0.0",
     info: {
       title: options.title,
       description: options.description,
