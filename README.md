@@ -15,10 +15,10 @@ npm install hono-typia-openapi
 ### Simple Case
 
 ```bash
-hto -a <hono-app-file-path> -t <application-title>
+hto -a <app-file> -t <title>
 ```
 
-And, in &lt;hono-app-file-path&gt;, you write the following:
+And, in &lt;app-file&gt;, you write the following:
 
 ```typescript
 import { Hono } from "hono";
@@ -43,23 +43,28 @@ const app = new Hono()
     },
   );
 
+// Generator uses this type to get the application schema.
 export type AppType = typeof app;
 ```
+
+Then, you can get the OpenAPI schema in the `swagger.json` file.
 
 ### Options
 
 You can specify the following options:
 
-- -t, --title &lt;title> The title of the application
-- -o, --openapi-ver &lt;openapiVer> The version of the OpenAPI specification (default: 3.1)
-- -d, --description &lt;description> The description of the API
-- --app-version &lt;version> The version of the API
-- -a, --app-file-path &lt;appFilePath> The path to the Hono app file
-- -n, --app-type-name &lt;appTypeName> The name of the application of Hono (default: AppType)
-- -s, --swagger-path &lt;swaggerPath> The path to the output file
-- -c, --tsconfig &lt;tsconfig> The path to the tsconfig file
-- -h, --help Display this message
-- -v, --version Display version number
+| Option                             | Description                                                             |
+| ---------------------------------- | ----------------------------------------------------------------------- |
+| -t, --title &lt;title>             | The title of the application                                            |
+| -o, --openapi &lt;openapi>         | The version of the OpenAPI specification. ['3.1', '3.0'] (default: 3.1) |
+| -d, --description &lt;description> | The description of the API                                              |
+| -V, --app-version &lt;version>     | The version of the API                                                  |
+| -a, --app-file &lt;appFile>        | The path to the Hono app file                                           |
+| -n, --app-type &lt;appType>        | Hono app type name (default: AppType)                                   |
+| -o, --output &lt;output>           | The path to the output swagger file                                     |
+| -t, --tsconfig &lt;tsconfig>       | The path to the tsconfig file                                           |
+| -h, --help                         | Display this message                                                    |
+| -v, --version                      | Display version number                                                  |
 
 You can also specify options with a configuration file.
 
@@ -81,9 +86,9 @@ export default defineConfig({
   title: "My API",
   description: "This is my API",
   version: "1.0.0",
-  appFilePath: "./app.ts",
-  appTypeName: "AppType",
-  swaggerPath: "./swagger.json",
+  appFile: "./app.ts",
+  appType: "AppType",
+  output: "./swagger.json",
   tsconfig: "./tsconfig.json",
 });
 ```

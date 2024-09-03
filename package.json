@@ -1,7 +1,7 @@
 {
   "name": "hono-typia-openapi",
-  "version": "0.0.3",
-  "description": "",
+  "version": "0.0.4",
+  "description": "Open API Schema Generator for Hono with typia",
   "type": "module",
   "scripts": {
     "run-sample": "tsx scripts/run.ts",
@@ -25,7 +25,8 @@
   "author": "miyaji255 <84168445+miyaji255@users.noreply.github.com>",
   "license": "MIT",
   "repository": {
-    "url": "https://github.com/miyaji255/hono-typia-openapi"
+    "type": "git",
+    "url": "git+https://github.com/miyaji255/hono-typia-openapi.git"
   },
   "bugs": {
     "url": "https://github.com/miyaji255/hono-typia-openapi/issues"
