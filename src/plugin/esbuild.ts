@@ -1,4 +1,5 @@
-import unplugin from "./index.js";
+import unplugin, { type HtoConfig } from "./index.js";
+export type { HtoConfig };
 
 /**
  * esbuild plugin for Hono Typia OpenAPI

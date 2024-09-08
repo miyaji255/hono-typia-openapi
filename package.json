@@ -42,19 +42,109 @@
     "!src/test/**/*"
   ],
   "exports": {
-    "./*": {
+    ".": {
       "import": {
-        "default": "./dist/esm/*.js",
-        "require": "./dist/esm/*.d.ts"
+        "default": "./dist/esm/index.js",
+        "require": "./dist/esm/index.d.ts"
       },
       "require": {
-        "default": "./dist/cjs/*.js",
-        "types": "./dist/cjs/*.d.ts"
-      },
-      "default": {
-        "default": "./dist/esm/*.js",
-        "require": "./dist/esm/*.d.ts"
+        "default": "./dist/cjs/index.js",
+        "types": "./dist/cjs/index.d.ts"
       }
+    },
+    "./config": {
+      "import": {
+        "default": "./dist/esm/config.js",
+        "types": "./dist/esm/config.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/config.js",
+        "types": "./dist/cjs/config.d.ts"
+      }
+    },
+    "./core": {
+      "import": {
+        "default": "./dist/esm/core/index.js",
+        "types": "./dist/esm/core/index.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/core/index.js",
+        "types": "./dist/cjs/core/index.d.ts"
+      }
+    },
+    "./esbuild": {
+      "import": {
+        "default": "./dist/esm/plugin/esbuild.js",
+        "types": "./dist/esm/plugin/esbuild.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/plugin/esbuild.js",
+        "types": "./dist/cjs/plugin/esbuild.d.ts"
+      }
+    },
+    "./farm": {
+      "import": {
+        "default": "./dist/esm/plugin/farm.js",
+        "types": "./dist/esm/plugin/farm.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/plugin/farm.js",
+        "types": "./dist/cjs/plugin/farm.d.ts"
+      }
+    },
+    "./rolldown": {
+      "import": {
+        "default": "./dist/esm/plugin/rolldown.js",
+        "types": "./dist/esm/plugin/rolldown.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/plugin/rolldown.js",
+        "types": "./dist/cjs/plugin/rolldown.d.ts"
+      }
+    },
+    "./rollup": {
+      "import": {
+        "default": "./dist/esm/plugin/rollup.js",
+        "types": "./dist/esm/plugin/rollup.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/plugin/rollup.js",
+        "types": "./dist/cjs/plugin/rollup.d.ts"
+      }
+    },
+    "./rspack": {
+      "import": {
+        "default": "./dist/esm/plugin/rspack.js",
+        "types": "./dist/esm/plugin/rspack.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/plugin/rspack.js",
+        "types": "./dist/cjs/plugin/rspack.d.ts"
+      }
+    },
+    "./vite": {
+      "import": {
+        "default": "./dist/esm/plugin/vite.js",
+        "types": "./dist/esm/plugin/vite.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/plugin/vite.js",
+        "types": "./dist/cjs/plugin/vite.d.ts"
+      }
+    },
+    "./webpack": {
+      "import": {
+        "default": "./dist/esm/plugin/webpack.js",
+        "types": "./dist/esm/plugin/webpack.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/plugin/webpack.js",
+        "types": "./dist/cjs/plugin/webpack.d.ts"
+      }
+    },
+    "./dist/*": {
+      "import": "./dist/esm/*",
+      "require": "./dist/cjs/*"
     }
   },
   "peerDependencies": {

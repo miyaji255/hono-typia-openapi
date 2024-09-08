@@ -37,6 +37,9 @@ export interface HtoGenerateOptions {
   appType: string;
 }
 
+/**
+ * The configuration for the Hono Typia OpenAPI generator.
+ */
 export interface HtoConfig
   extends Pick<HtoGenerateOptions, "title" | "appFile">,
     Partial<Omit<HtoGenerateOptions, "title" | "appFile">> {

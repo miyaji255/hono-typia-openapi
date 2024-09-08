@@ -1,4 +1,5 @@
-import unplugin from "./index.js";
+import unplugin, { type HtoConfig } from "./index.js";
+export type { HtoConfig };
 
 /**
  * Rollup plugin for Hono Typia OpenAPI
@@ -6,7 +7,7 @@ import unplugin from "./index.js";
  * @example
  * ```ts
  * // rollup.config.js
- * import HtoPlugin from "hono-typia-openapi/plugin/rollup";
+ * import HtoPlugin from "hono-typia-openapi/rollup";
  *
  * export default {
  *   plugins: [

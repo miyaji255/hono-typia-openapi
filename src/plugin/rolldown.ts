@@ -1,4 +1,5 @@
-import unplugin from "./index.js";
+import unplugin, { type HtoConfig } from "./index.js";
+export type { HtoConfig };
 
 /**
  * Rolldown plugin for Hono Typia OpenAPI
@@ -7,7 +8,7 @@ import unplugin from "./index.js";
  * ```ts
  * // rolldown.config.ts
  * import { defineConfig } from "rolldown";
- * import HtoPlugin from "hono-typia-openapi/plugin/rolldown";
+ * import HtoPlugin from "hono-typia-openapi/rolldown";
  *
  * export default defineConfig({
  *   plugins: [

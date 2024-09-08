@@ -1,4 +1,5 @@
-import unplugin from "./index.js";
+import unplugin, { type HtoConfig } from "./index.js";
+export type { HtoConfig };
 
 /**
  * rspack plugin for Hono Typia OpenAPI
@@ -6,7 +7,7 @@ import unplugin from "./index.js";
  * @example
  * ```ts
  * // rspack.config.ts
- * const HtoPlugin = require("hono-typia-openapi/plugin/rspack");
+ * const HtoPlugin = require("hono-typia-openapi/rspack");
  *
  * module.exports = {
  *   plugins: [

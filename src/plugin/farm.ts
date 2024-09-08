@@ -1,4 +1,5 @@
-import unplugin from "./index.js";
+import unplugin, { type HtoConfig } from "./index.js";
+export type { HtoConfig };
 
 /**
  * Fram plugin for Hono Typia OpenAPI
@@ -7,7 +8,7 @@ import unplugin from "./index.js";
  * ```ts
  * // farm.config.ts
  * import { defineConfig } from "@farmfe/core"
- * import HtoPlugin from "hono-typia-openapi/plugin/farm";
+ * import HtoPlugin from "hono-typia-openapi/farm";
  *
  * export default defineConfig({
  *   plugins: [

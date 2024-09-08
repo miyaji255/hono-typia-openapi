@@ -1,4 +1,5 @@
-import unplugin from "./index.js";
+import unplugin, { type HtoConfig } from "./index.js";
+export type { HtoConfig };
 
 /**
  * Vite plugin for Hono Typia OpenAPI
@@ -7,7 +8,7 @@ import unplugin from "./index.js";
  * ```ts
  * // vite.config.ts
  * import { defineConfig } from "vite";
- * import HtoPlugin from "hono-typia-openapi/plugin/vite";
+ * import HtoPlugin from "hono-typia-openapi/vite";
  *
  * export default defineConfig({
  *   plugins: [
@@ -19,5 +20,6 @@ import unplugin from "./index.js";
  *     }),
  *   ],
  * }),
+ * ```
  */
 export default unplugin.vite;
