@@ -2,7 +2,7 @@ import { cosmiconfig } from "cosmiconfig";
 import typia from "typia";
 import {
   searchTsConfig,
-  validateOptions,
+  assertConfig,
   type HtoConfig,
 } from "./core/options.js";
 import { cac } from "cac";
@@ -10,6 +10,7 @@ import { createTsProgram, generateOpenApiDocs } from "./core/index.js";
 import * as path from "path";
 import ts from "typescript";
 import { version as packageVersion } from "./meta.js";
+import { consola } from "./utils/log.js";
 
 const explorer = cosmiconfig("hto", {
   searchPlaces: [
@@ -84,12 +85,15 @@ async function main() {
       ? path.resolve(process.cwd(), configFromCli["tsconfig"])
       : config.tsconfig) ?? searchTsConfig();
 
-  validateOptions(config);
+  assertConfig(config);
+
+  consola.start("Generating OpenAPI docs...");
   const program = createTsProgram(config);
 
   const openAPIDocs = generateOpenApiDocs(program, config);
   ts.sys.writeFile(config.output, JSON.stringify(openAPIDocs));
-  console.log("OpenAPI docs generated successfully");
+
+  consola.success("OpenAPI docs generated successfully");
 }
 
-main().catch(console.error);
+main().catch(consola.error);

@@ -52,14 +52,10 @@ export interface HtoConfig
 }
 
 /** @internal */
-export function validateOptions(
-  options: Partial<HtoConfig>,
-): asserts options is Required<HtoConfig> {
-  if (options.title === undefined) throw new Error("Title is required");
-  if (options.appFile === undefined)
-    throw new Error("App file path is required");
-
-  typia.assert<HtoConfig>(options);
+export function assertConfig(
+  config: unknown,
+): asserts config is Required<HtoConfig> {
+  typia.assertGuard<Required<HtoConfig>>(config);
 }
 
 /** @internal */

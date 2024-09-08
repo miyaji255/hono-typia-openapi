@@ -44,16 +44,16 @@
   "exports": {
     "./*": {
       "import": {
-        "default": "./dist/esm/*",
-        "require": "./dist/esm/*"
+        "default": "./dist/esm/*.js",
+        "require": "./dist/esm/*.d.ts"
       },
       "require": {
-        "default": "./dist/cjs/*",
-        "types": "./dist/cjs/*"
+        "default": "./dist/cjs/*.js",
+        "types": "./dist/cjs/*.d.ts"
       },
       "default": {
-        "default": "./dist/esm/*",
-        "require": "./dist/esm/*"
+        "default": "./dist/esm/*.js",
+        "require": "./dist/esm/*.d.ts"
       }
     }
   },
@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "cac": "^6.7.14",
+    "consola": "^3.2.3",
     "cosmiconfig": "^9.0.0",
     "unplugin": "^1.13.1"
   },
