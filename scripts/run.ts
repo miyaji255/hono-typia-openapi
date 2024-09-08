@@ -1,6 +1,6 @@
 import ts from "typescript";
 import * as path from "path";
-import { generateOpenAPIDocs } from "../src/core/index.js";
+import { generateOpenApiDocs } from "../src/core/index.js";
 import { writeFile } from "fs/promises";
 
 async function main() {
@@ -16,7 +16,7 @@ async function main() {
   const fileName = path.resolve(__dirname, "../samples/app1.ts");
   const program = ts.createProgram([fileName], compilerOptions);
 
-  const result = generateOpenAPIDocs(program, {
+  const result = generateOpenApiDocs(program, {
     title: "app",
     version: "1.0.0",
     description: "",

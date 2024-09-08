@@ -1,4 +1,8 @@
-export interface HtoOptions {
+import { existsSync } from "fs";
+import * as path from "path";
+import typia from "typia";
+
+export interface HtoGenerateOptions {
   /**
    * The title of the application.
    */
@@ -31,4 +35,41 @@ export interface HtoOptions {
    * @default "AppType"
    */
   appType: string;
+}
+
+export interface HtoConfig
+  extends Pick<HtoGenerateOptions, "title" | "appFile">,
+    Partial<Omit<HtoGenerateOptions, "title" | "appFile">> {
+  /**
+   * The path to the output swagger file.
+   */
+  output?: string;
+
+  /**
+   * The path to the tsconfig file.
+   */
+  tsconfig?: string;
+}
+
+/** @internal */
+export function validateOptions(
+  options: Partial<HtoConfig>,
+): asserts options is Required<HtoConfig> {
+  if (options.title === undefined) throw new Error("Title is required");
+  if (options.appFile === undefined)
+    throw new Error("App file path is required");
+
+  typia.assert<HtoConfig>(options);
+}
+
+/** @internal */
+export function searchTsConfig(): string {
+  let current = process.cwd();
+  while (true) {
+    const tsConfigPath = path.resolve(current, "tsconfig.json");
+    if (existsSync(tsConfigPath)) return tsConfigPath;
+    const parent = path.dirname(current);
+    if (parent === current) throw new Error("tsconfig.json not found");
+    current = parent;
+  }
 }

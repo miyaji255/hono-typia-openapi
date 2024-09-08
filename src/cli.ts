@@ -1,11 +1,14 @@
 import { cosmiconfig } from "cosmiconfig";
 import typia from "typia";
-import type { HtoCliOptions } from "./config.js";
+import {
+  searchTsConfig,
+  validateOptions,
+  type HtoConfig,
+} from "./core/options.js";
 import { cac } from "cac";
-import { generateOpenAPIDocs } from "./core/index.js";
+import { createTsProgram, generateOpenApiDocs } from "./core/index.js";
 import * as path from "path";
 import ts from "typescript";
-import { existsSync } from "fs";
 import { version as packageVersion } from "./meta.js";
 
 const explorer = cosmiconfig("hto", {
@@ -24,10 +27,10 @@ const explorer = cosmiconfig("hto", {
 
 async function main() {
   const result = await explorer.search();
-  const config: Partial<HtoCliOptions> =
+  const config: Partial<HtoConfig> =
     result === null || result.isEmpty
       ? {}
-      : typia.assert<HtoCliOptions>(result.config);
+      : typia.assert<HtoConfig>(result.config);
 
   if (result !== null) {
     const dirname = path.dirname(result.filepath);
@@ -80,39 +83,13 @@ async function main() {
     (configFromCli["tsconfig"]
       ? path.resolve(process.cwd(), configFromCli["tsconfig"])
       : config.tsconfig) ?? searchTsConfig();
+
   validateOptions(config);
+  const program = createTsProgram(config);
 
-  const { options: compilerOptions } = ts.parseJsonConfigFileContent(
-    ts.readConfigFile(config.tsconfig, ts.sys.readFile).config,
-    ts.sys,
-    config.title,
-  );
-  const program = ts.createProgram([config.appFile], compilerOptions);
-
-  const openAPIDocs = generateOpenAPIDocs(program, config);
+  const openAPIDocs = generateOpenApiDocs(program, config);
   ts.sys.writeFile(config.output, JSON.stringify(openAPIDocs));
   console.log("OpenAPI docs generated successfully");
 }
 
 main().catch(console.error);
-
-function validateOptions(
-  options: Partial<HtoCliOptions>,
-): asserts options is Required<HtoCliOptions> {
-  if (options.title === undefined) throw new Error("Title is required");
-  if (options.appFile === undefined)
-    throw new Error("App file path is required");
-
-  typia.assert<HtoCliOptions>(options);
-}
-
-function searchTsConfig(): string {
-  let current = process.cwd();
-  while (true) {
-    const tsConfigPath = path.resolve(current, "tsconfig.json");
-    if (existsSync(tsConfigPath)) return tsConfigPath;
-    const parent = path.dirname(current);
-    if (parent === current) throw new Error("tsconfig.json not found");
-    current = parent;
-  }
-}

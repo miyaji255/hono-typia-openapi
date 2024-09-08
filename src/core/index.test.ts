@@ -1,7 +1,7 @@
 import path from "path";
 import ts from "typescript";
 import { describe, expect, test } from "vitest";
-import { generateOpenAPIDocs } from "./index.js";
+import { generateOpenApiDocs } from "./index.js";
 import { fileURLToPath } from "url";
 
 describe("main", () => {
@@ -22,7 +22,7 @@ describe("main", () => {
     const fileName = path.resolve(dirname, `../../samples/${sampleName}.ts`);
     const program = ts.createProgram([fileName], compilerOptions);
 
-    const result = generateOpenAPIDocs(program, {
+    const result = generateOpenApiDocs(program, {
       title: "app",
       version: "1.0.0",
       description: "",

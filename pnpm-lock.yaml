@@ -13,6 +13,9 @@ importers:
       cosmiconfig:
         specifier: ^9.0.0
         version: 9.0.0(typescript@5.5.3)
+      unplugin:
+        specifier: ^1.13.1
+        version: 1.13.1
     devDependencies:
       "@hono/typia-validator":
         specifier: ^0.0.5
@@ -524,6 +527,14 @@ packages:
       {
         integrity: sha512-c/UdELMuHitQbbc/EVctlBaxoYAwQPQdSNwv7z/vHyBKy2edYZaFgptE27BRueZB7eW8po+cllotMNTDpL3HWg==,
       }
+
+  acorn@8.12.1:
+    resolution:
+      {
+        integrity: sha512-tcpGyI9zbizT9JbV6oYE477V6mTlXvvi0T0G3SNIYE2apm/G5huBa1+K89VGeovbg+jycCrfhl3ADxErOuO6Jg==,
+      }
+    engines: { node: ">=0.4.0" }
+    hasBin: true
 
   ansi-escapes@4.3.2:
     resolution:
@@ -1614,6 +1625,18 @@ packages:
         integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==,
       }
 
+  unplugin@1.13.1:
+    resolution:
+      {
+        integrity: sha512-6Kq1iSSwg7KyjcThRUks9LuqDAKvtnioxbL9iEtB9ctTyBA5OmrB8gZd/d225VJu1w3UpUsKV7eGrvf59J7+VA==,
+      }
+    engines: { node: ">=14.0.0" }
+    peerDependencies:
+      webpack-sources: ^3
+    peerDependenciesMeta:
+      webpack-sources:
+        optional: true
+
   util-deprecate@1.0.2:
     resolution:
       {
@@ -1691,6 +1714,12 @@ packages:
     resolution:
       {
         integrity: sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==,
+      }
+
+  webpack-virtual-modules@0.6.2:
+    resolution:
+      {
+        integrity: sha512-66/V2i5hQanC51vBQKPH4aI8NMAcBW59FVBs+rC7eGHupMyfn34q7rZIE+ETlJ+XTevqfUhVVBgSUNSW2flEUQ==,
       }
 
   which@1.3.1:
@@ -1948,6 +1977,8 @@ snapshots:
       estree-walker: 3.0.3
       loupe: 3.1.1
       tinyrainbow: 1.2.0
+
+  acorn@8.12.1: {}
 
   ansi-escapes@4.3.2:
     dependencies:
@@ -2535,6 +2566,11 @@ snapshots:
 
   undici-types@5.26.5: {}
 
+  unplugin@1.13.1:
+    dependencies:
+      acorn: 8.12.1
+      webpack-virtual-modules: 0.6.2
+
   util-deprecate@1.0.2: {}
 
   vite-node@2.0.3(@types/node@20.14.11):
@@ -2598,6 +2634,8 @@ snapshots:
   wcwidth@1.0.1:
     dependencies:
       defaults: 1.0.4
+
+  webpack-virtual-modules@0.6.2: {}
 
   which@1.3.1:
     dependencies:
