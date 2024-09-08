@@ -15,7 +15,7 @@ import { consola } from "../utils/log.js";
 const unplugin /* #__PURE__ */ = createUnplugin<
   HtoConfig & {
     /**
-     * Enable watch mode explicitly.
+     * Specify watch mode explicitly.
      *
      * @default false
      */

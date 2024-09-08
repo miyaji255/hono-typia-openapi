@@ -80,7 +80,7 @@ export function analyzeSchema(
           requestBody.required = true;
         }
         if (input.form !== undefined) {
-          requestBody.content[format2mediaType.form] = {
+          requestBody.content["application/x-www-form-urlencoded"] = {
             schema: schema.schemas[input.form],
           };
           requestBody.required = true;

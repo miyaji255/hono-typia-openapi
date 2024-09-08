@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Open API Schema Generator for Hono with typia",
   "type": "module",
+  "sideEffects": false,
   "scripts": {
     "run-sample": "tsx scripts/run.ts",
     "build": "pnpm build:esm && pnpm build:cjs",

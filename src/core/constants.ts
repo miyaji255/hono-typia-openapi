@@ -13,11 +13,8 @@ export type HttpMethod = (typeof HttpMethod)[number];
 
 export const format2mediaType = {
   json: "application/json",
-  xml: "application/xml",
   html: "text/html",
   text: "text/plain",
-  form: "application/x-www-form-urlencoded",
-  multipart: "multipart/form-data",
 } as const;
 
 export const HonoFormats = Object.keys(
