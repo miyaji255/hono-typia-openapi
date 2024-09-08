@@ -12,6 +12,8 @@ npm install hono-typia-openapi
 
 ## Usage
 
+You can use the `hto` command or Plugins to generate the OpenAPI schema.
+
 ### Simple Case
 
 ```bash
@@ -91,6 +93,32 @@ export default defineConfig({
   output: "./swagger.json",
   tsconfig: "./tsconfig.json",
 });
+```
+
+### Plugins
+
+Plugins of this package are created with [Unplugin](https://unplugin.unjs.io/). You can use your favorite bundler.
+
+#### Vite
+
+Here is an example of using the Vite plugin:
+
+```typescript
+// vite.config.ts
+import { defineConfig } from "vite";
+import HtoPlugin from "hono-typia-openapi/vite";
+
+export default defineConfig(({ command }) => ({
+  plugins: [
+    HtoPlugin({
+      title: "My API",
+      appFile: `${__dirname}/src/app.ts`,
+      output: `${__dirname}/swagger.json`,
+      tsconfig: `${__dirname}/tsconfig.json`,
+      watchMode: command === "serve",
+    }),
+  ],
+}));
 ```
 
 ### Show Swagger UI with Hono

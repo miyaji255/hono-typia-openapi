@@ -14,9 +14,8 @@ import { consola } from "../utils/log.js";
 
 const unplugin /* #__PURE__ */ = createUnplugin<
   HtoConfig & {
-    // meta.watchMode is only available on Rollup.
     /**
-     * Watch mode
+     * Enable watch mode explicitly.
      *
      * @default false
      */

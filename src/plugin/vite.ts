@@ -19,7 +19,7 @@ export type { HtoConfig };
  *       tsconfig: `${__dirname}/tsconfig.json`,
  *     }),
  *   ],
- * }),
+ * });
  * ```
  */
 export default unplugin.vite;
