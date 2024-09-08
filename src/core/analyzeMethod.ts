@@ -8,6 +8,7 @@ import {
 import { InvalidTypeError } from "./errors/InvalidTypeError.js";
 import { analyzeParamters } from "./analyzeParameters.js";
 
+/** @internal */
 export interface MethodSchema {
   method: HttpMethod;
   input: {
@@ -33,6 +34,7 @@ export interface MethodSchema {
   >;
 }
 
+/** @internal */
 export function analyzeMethod(
   checker: ts.TypeChecker,
   method: HttpMethod,

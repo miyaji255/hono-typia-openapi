@@ -1,6 +1,9 @@
-import ts, { sys } from "typescript";
+export { InvalidTypeError } from "./errors/InvalidTypeError.js";
+export { type HtoConfig, type HtoGenerateOptions } from "./options.js";
+
+import ts from "typescript";
 import { generateOpenApiDocs } from "./generateOpenApiDocs.js";
-import { HtoConfig } from "./options.js";
+import { type HtoConfig } from "./options.js";
 
 export function createTsProgram(config: Required<HtoConfig>) {
   const { options: compilerOptions } = ts.parseJsonConfigFileContent(
@@ -43,13 +46,13 @@ export function createTsWatchProgram(config: Required<HtoConfig>) {
 
 export { generateOpenApiDocs };
 
-function shouldBePretty(options: ts.CompilerOptions) {
-  if (!options || typeof options.pretty === "undefined") {
-    return (
-      !!ts.sys.writeOutputIsTTY &&
-      ts.sys.writeOutputIsTTY() &&
-      !sys.getEnvironmentVariable("NO_COLOR")
-    );
-  }
-  return options.pretty;
-}
+// function shouldBePretty(options: ts.CompilerOptions) {
+//   if (!options || typeof options.pretty === "undefined") {
+//     return (
+//       !!ts.sys.writeOutputIsTTY &&
+//       ts.sys.writeOutputIsTTY() &&
+//       !sys.getEnvironmentVariable("NO_COLOR")
+//     );
+//   }
+//   return options.pretty;
+// }

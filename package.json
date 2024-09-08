@@ -42,34 +42,18 @@
     "!src/test/**/*"
   ],
   "exports": {
-    ".": {
+    "./*": {
       "import": {
-        "default": "./dist/esm/index.js",
-        "require": "./dist/esm/index.d.ts"
+        "default": "./dist/esm/*",
+        "require": "./dist/esm/*"
       },
       "require": {
-        "default": "./dist/cjs/index.js",
-        "types": "./dist/cjs/index.d.ts"
-      }
-    },
-    "./config": {
-      "import": {
-        "default": "./dist/esm/config.js",
-        "types": "./dist/esm/config.d.ts"
+        "default": "./dist/cjs/*",
+        "types": "./dist/cjs/*"
       },
-      "require": {
-        "default": "./dist/cjs/config.js",
-        "types": "./dist/cjs/config.d.ts"
-      }
-    },
-    "./core": {
-      "import": {
-        "default": "./dist/esm/core/index.js",
-        "types": "./dist/esm/core/index.d.ts"
-      },
-      "require": {
-        "default": "./dist/cjs/core/index.js",
-        "types": "./dist/cjs/core/index.d.ts"
+      "default": {
+        "default": "./dist/esm/*",
+        "require": "./dist/esm/*"
       }
     }
   },

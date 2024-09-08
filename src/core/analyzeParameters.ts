@@ -2,6 +2,7 @@ import ts from "typescript";
 import { isOptionalProperty } from "../utils/typescript.js";
 import { InvalidTypeError } from "./errors/InvalidTypeError.js";
 
+/** @internal */
 export interface ParameterSchema {
   in: "query" | "path" | "header" | "cookie";
   name: string;
@@ -10,6 +11,7 @@ export interface ParameterSchema {
   required: boolean;
 }
 
+/** @internal */
 export function analyzeParamters(
   checker: ts.TypeChecker,
   types: {

@@ -3,6 +3,7 @@ import * as path from "path";
 import type { HtoGenerateOptions } from "./options.js";
 import { analyzeSchema } from "./analyzeSchema.js";
 
+/** @internal */
 export function generateOpenApiDocs(
   program: ts.Program,
   options: HtoGenerateOptions,
