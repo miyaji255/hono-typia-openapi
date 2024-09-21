@@ -28,10 +28,10 @@ const explorer = cosmiconfig("hto", {
 
 async function main() {
   const result = await explorer.search();
-  const config: Partial<HtoConfig> =
+  const config: Partial<HtoConfig<"3.1">> | Partial<HtoConfig<"3.0">> =
     result === null || result.isEmpty
       ? {}
-      : typia.assert<HtoConfig>(result.config);
+      : typia.assert<HtoConfig<"3.1"> | HtoConfig<"3.0">>(result.config);
 
   if (result !== null) {
     const dirname = path.dirname(result.filepath);

@@ -1,6 +1,6 @@
 import ts from "typescript";
 
-export function createTsProgram(
+export function createTsTestProgram(
   codes: { fileName: string; code: string }[],
   compilerOptions?: Partial<ts.CompilerOptions>,
 ): ts.Program {
@@ -40,7 +40,7 @@ export function createTsProgram(
   return program;
 }
 
-export function createTsType(
+export function createTsTestType(
   code: string,
   typeAiliasName: string,
   compilerOptions?: Partial<ts.CompilerOptions>,
@@ -50,7 +50,7 @@ export function createTsType(
   getProperty: (type: ts.Type, name: string) => ts.Type | undefined;
 } {
   const fileName = "test.ts";
-  const program = createTsProgram([{ code, fileName }], compilerOptions);
+  const program = createTsTestProgram([{ code, fileName }], compilerOptions);
   const checker = program.getTypeChecker();
   const sourceFile = program.getSourceFile(fileName);
   let targetNode: ts.TypeAliasDeclaration | undefined;

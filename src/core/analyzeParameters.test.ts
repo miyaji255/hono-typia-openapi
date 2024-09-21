@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { createTsProgram, getTypeFromSource } from "../test/utils.js";
+import { createTsTestProgram, getTypeFromSource } from "../test/utils.js";
 import { analyzeParamters } from "./analyzeParameters.js";
 
 describe("analyzeParameters", () => {
-  const program = createTsProgram([
+  const program = createTsTestProgram([
     {
       fileName: "test.ts",
       code: `
@@ -29,6 +29,10 @@ type Type = {
     {
       fileName: "number param.ts",
       code: "type Type = { param: { id: string | number } }",
+    },
+    {
+      fileName: "number param2.ts",
+      code: "type Type = { param: { id: number } }",
     },
     {
       fileName: "array header.ts",
@@ -117,6 +121,10 @@ type Type = {
       "Path parameter, header or cookie must not be array type",
     ],
     ["number param.ts", "Path parameter, header or cookie must be string type"],
+    [
+      "number param2.ts",
+      "Path parameter, header or cookie must be string type",
+    ],
     [
       "array header.ts",
       "Path parameter, header or cookie must not be array type",

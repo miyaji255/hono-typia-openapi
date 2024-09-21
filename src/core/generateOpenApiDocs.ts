@@ -4,9 +4,9 @@ import type { HtoGenerateOptions } from "./options.js";
 import { analyzeSchema } from "./analyzeSchema.js";
 
 /** @internal */
-export function generateOpenApiDocs(
+export function generateOpenApiDocs<OpenAPI extends "3.0" | "3.1" = "3.1">(
   program: ts.Program,
-  options: HtoGenerateOptions,
+  options: HtoGenerateOptions<OpenAPI>,
 ) {
   const checker = program.getTypeChecker();
 
@@ -36,7 +36,9 @@ export function generateOpenApiDocs(
   );
   if (honoType === undefined) throw new Error("App type not found");
 
-  return analyzeSchema(checker, honoType, options);
+  const schemaType = checker.getTypeArguments(honoType as ts.TypeReference)[1]!;
+
+  return analyzeSchema(checker, schemaType, options);
 }
 
 function isHono(type: ts.Type) {

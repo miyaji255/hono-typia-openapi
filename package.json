@@ -142,10 +142,6 @@
         "default": "./dist/cjs/plugin/webpack.js",
         "types": "./dist/cjs/plugin/webpack.d.ts"
       }
-    },
-    "./dist/*": {
-      "import": "./dist/esm/*",
-      "require": "./dist/cjs/*"
     }
   },
   "peerDependencies": {
@@ -160,6 +156,7 @@
   },
   "devDependencies": {
     "@hono/typia-validator": "^0.0.5",
+    "@ryoppippi/unplugin-typia": "^1.0.6",
     "@samchon/openapi": "^0.4.2",
     "@types/node": "^20.14.11",
     "@types/ts-expose-internals": "npm:ts-expose-internals@5.5.3",

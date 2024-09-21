@@ -5,7 +5,9 @@ import ts from "typescript";
 import { generateOpenApiDocs } from "./generateOpenApiDocs.js";
 import { type HtoConfig } from "./options.js";
 
-export function createTsProgram(config: Required<HtoConfig>) {
+export function createTsProgram<OpenAPI extends "3.0" | "3.1" = "3.1">(
+  config: Required<HtoConfig<OpenAPI>>,
+) {
   const { options: compilerOptions } = ts.parseJsonConfigFileContent(
     ts.readConfigFile(config.tsconfig, ts.sys.readFile).config,
     ts.sys,
@@ -16,7 +18,9 @@ export function createTsProgram(config: Required<HtoConfig>) {
   return program;
 }
 
-export function createTsWatchProgram(config: Required<HtoConfig>) {
+export function createTsWatchProgram<OpenAPI extends "3.0" | "3.1" = "3.1">(
+  config: Required<HtoConfig<OpenAPI>>,
+) {
   const { options: compilerOptions, watchOptions } =
     ts.parseJsonConfigFileContent(
       ts.readConfigFile(config.tsconfig, ts.sys.readFile).config,

@@ -2,7 +2,7 @@ import { existsSync } from "fs";
 import * as path from "path";
 import typia from "typia";
 
-export interface HtoGenerateOptions {
+export interface HtoGenerateOptions<OpenAPI extends "3.1" | "3.0" = "3.1"> {
   /**
    * The title of the application.
    */
@@ -12,7 +12,7 @@ export interface HtoGenerateOptions {
    * The version of the OpenAPI specification
    * @default "3.1"
    */
-  openapi: "3.1" | "3.0";
+  openapi: OpenAPI;
 
   /**
    * The description of the API
@@ -40,9 +40,9 @@ export interface HtoGenerateOptions {
 /**
  * The configuration for the Hono Typia OpenAPI generator.
  */
-export interface HtoConfig
-  extends Pick<HtoGenerateOptions, "title" | "appFile">,
-    Partial<Omit<HtoGenerateOptions, "title" | "appFile">> {
+export interface HtoConfig<OpenAPI extends "3.1" | "3.0" = "3.1">
+  extends Pick<HtoGenerateOptions<OpenAPI>, "title" | "appFile">,
+    Partial<Omit<HtoGenerateOptions<OpenAPI>, "title" | "appFile">> {
   /**
    * The path to the output swagger file.
    */
@@ -55,11 +55,9 @@ export interface HtoConfig
 }
 
 /** @internal */
-export function assertConfig(
-  config: unknown,
-): asserts config is Required<HtoConfig> {
-  typia.assertGuard<Required<HtoConfig>>(config);
-}
+export const assertConfig: typia.AssertionGuard<
+  Required<HtoConfig<"3.1"> | HtoConfig<"3.0">>
+> = typia.createAssertGuard<Required<HtoConfig<"3.1"> | HtoConfig<"3.0">>>();
 
 /** @internal */
 export function searchTsConfig(): string {

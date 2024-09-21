@@ -5,48 +5,18 @@ import {
   PathItemObject,
 } from "../openapi/OpenApiV30.js";
 import { OpenAPISpec as OpenAPISpecV31 } from "../openapi/OpenApiV31.js";
-import { normalizePath } from "../utils/normalizePath.js";
+import { normalizePath } from "../utils/normalize.js";
 import { format2mediaType, HttpMethod } from "./constants.js";
 import { analyzeMethod } from "./analyzeMethod.js";
 import { createOpenAPISchema } from "./createOpenAPISchema.js";
 
-export function analyzeSchema(
+/** @internal */
+export function analyzeSchema<OpenAPI extends "3.0" | "3.1" = "3.1">(
   checker: ts.TypeChecker,
-  appType: ts.Type,
-  options: HtoGenerateOptions,
-): OpenAPISpecV30 | OpenAPISpecV31 | undefined {
-  const routeType = checker.getTypeArguments(appType as ts.TypeReference)[1]!;
-
-  const types: ts.Type[] = [];
-  const routes = routeType
-    .getApparentProperties()
-    .map(({ name: path }) => {
-      const pathType = checker.getTypeOfPropertyOfType(routeType, path);
-      if (pathType === undefined) return null;
-
-      const normalizedPath = normalizePath(path);
-      return {
-        path: normalizedPath,
-        methods: pathType
-          .getApparentProperties()
-          .map(({ name: method }) => {
-            const normalizedMethod = method.slice(1);
-            const methodType = checker.getTypeOfPropertyOfType(
-              pathType,
-              method,
-            );
-            if (
-              !HttpMethod.includes(normalizedMethod) ||
-              methodType === undefined
-            )
-              return null;
-
-            return analyzeMethod(checker, normalizedMethod, methodType, types);
-          })
-          .filter((s) => s !== null),
-      };
-    })
-    .filter((s) => s !== null);
+  schemaType: ts.Type,
+  options: Omit<HtoGenerateOptions<OpenAPI>, "appType" | "appFile">,
+): (OpenAPI extends "3.1" ? OpenAPISpecV31 : OpenAPISpecV30) | undefined {
+  const { routes, types } = analyzeSchemaToRoutes(checker, schemaType);
 
   const schema = createOpenAPISchema(options.openapi, checker, types);
 
@@ -118,3 +88,44 @@ export function analyzeSchema(
     components: schema.components as any,
   } as any;
 }
+
+/** @internal */
+function analyzeSchemaToRoutes(checker: ts.TypeChecker, schemaType: ts.Type) {
+  const types: ts.Type[] = [];
+  const routes = schemaType
+    .getApparentProperties()
+    .map(({ name: path }) => {
+      const pathType = checker.getTypeOfPropertyOfType(schemaType, path);
+      if (pathType === undefined) return null;
+
+      const normalizedPath = normalizePath(path);
+      return {
+        path: normalizedPath,
+        methods: pathType
+          .getApparentProperties()
+          .map(({ name: method }) => {
+            const normalizedMethod = method.slice(1);
+            const methodType = checker.getTypeOfPropertyOfType(
+              pathType,
+              method,
+            );
+            if (
+              !HttpMethod.includes(normalizedMethod) ||
+              methodType === undefined
+            )
+              return null;
+
+            return analyzeMethod(checker, normalizedMethod, methodType, types);
+          })
+          .filter((s) => s !== null),
+      };
+    })
+    .filter((s) => s !== null);
+
+  return { routes, types } as const;
+}
+
+/** @internal */
+export const EXPORT_FOR_TEST = {
+  analyzeSchemaToRoutes,
+};
