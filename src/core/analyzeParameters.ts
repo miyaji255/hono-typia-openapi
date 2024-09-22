@@ -64,6 +64,24 @@ function createPramterObject(
       throw new InvalidTypeError(
         "Path parameter, header or cookie must be string type",
       );
+    if (key === "query" && !isArray && checker.isArrayType(exactType)) {
+      const elementTypeStr = checker.typeToString(
+        checker.getElementTypeOfArrayType(exactType)!,
+      );
+      throw new InvalidTypeError(
+        `Query parameter must not be array type. Use \`${elementTypeStr}[] | ${elementTypeStr}\` instead.`,
+      );
+    }
+    if (
+      key === "query" &&
+      !checker.isTypeAssignableTo(
+        isArray ? checker.getElementTypeOfArrayType(exactType)! : exactType,
+        checker.getStringType(),
+      )
+    )
+      throw new InvalidTypeError(
+        "Query parameter must be string type or array of string",
+      );
 
     return {
       in: key,
@@ -78,9 +96,9 @@ function createPramterObject(
 /**
  * Get the exact type of array.
  *
- * string | string[] => string[]
- * string | undefined => string
- * string | undefined | string[] => string[]
+ * - `string | string[]` => `string[]`
+ * - `string | undefined` => `string`
+ * - `string | undefined | string[]` => `string[]`
  */
 function getExactType(
   checker: ts.TypeChecker,

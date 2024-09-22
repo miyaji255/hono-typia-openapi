@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { createTsTestProgram, getTypeFromSource } from "../test/utils.js";
 import { analyzeParamters } from "./analyzeParameters.js";
+import { InvalidTypeError } from "./errors/InvalidTypeError.js";
 
 describe("analyzeParameters", () => {
   const program = createTsTestProgram([
@@ -17,6 +18,18 @@ type Type = {
   cookie: { session: string };
 }
 `,
+    },
+    {
+      fileName: "only array query.ts",
+      code: "type Type = { query: { statuses: string[] } }",
+    },
+    {
+      fileName: "optional only array query.ts",
+      code: "type Type = { query: { statuses?: string[] } }",
+    },
+    {
+      fileName: "number query.ts",
+      code: "type Type = { query: { id: number } }",
     },
     {
       fileName: "optional param.ts",
@@ -115,6 +128,18 @@ type Type = {
   });
 
   test.each<[string, string]>([
+    [
+      "only array query.ts",
+      "Query parameter must not be array type. Use `string[] | string` instead.",
+    ],
+    [
+      "optional only array query.ts",
+      "Query parameter must not be array type. Use `string[] | string` instead.",
+    ],
+    [
+      "number query.ts",
+      "Query parameter must be string type or array of string",
+    ],
     ["optional param.ts", "Path parameter must be required"],
     [
       "array param.ts",
@@ -156,6 +181,6 @@ type Type = {
         header: checker.getTypeOfPropertyOfType(type, "header"),
         cookie: checker.getTypeOfPropertyOfType(type, "cookie"),
       }),
-    ).toThrowError(expectedErrorMessage);
+    ).toThrowError(new InvalidTypeError(expectedErrorMessage));
   });
 });
