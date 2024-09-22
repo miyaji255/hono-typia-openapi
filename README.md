@@ -1,6 +1,7 @@
 # hono-typia-openapi
 
 [![npm version](https://badge.fury.io/js/hono-typia-openapi.svg)](https://badge.fury.io/js/hono-typia-openapi)
+[![CI](https://github.com/miyaji255/hono-typia-openapi/actions/workflows/ci.yaml/badge.svg)](https://github.com/miyaji255/hono-typia-openapi/actions/workflows/ci.yaml)
 
 This is an Open API Schema Generator for Hono with typia.
 
