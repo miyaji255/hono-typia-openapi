@@ -3,8 +3,8 @@ import ts from "typescript";
 import { describe, expect, test } from "vitest";
 import { generateOpenApiDocs } from "./index.js";
 
-describe.only("main", () => {
-  test.only.each([
+describe("main", () => {
+  test.each([
     "app1",
     // "app2", // typia does not support pertternProperties, so this test will fail
   ])("should work %s", async (sampleName) => {

@@ -5,7 +5,6 @@ import { createTsTestProgram, getTypeFromSource } from "../test/utils.js";
 import { Type } from "typescript";
 import ts from "typescript";
 import { InvalidTypeError } from "./errors/InvalidTypeError.js";
-import { OpenAPISpec as OpenAPISpecV30 } from "../openapi/OpenApiV30.js";
 
 describe("createOpenAPISchema", () => {
   const program = createTsTestProgram([
