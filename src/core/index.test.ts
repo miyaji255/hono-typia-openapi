@@ -2,24 +2,22 @@ import path from "path";
 import ts from "typescript";
 import { describe, expect, test } from "vitest";
 import { generateOpenApiDocs } from "./index.js";
-import { fileURLToPath } from "url";
 
-describe("main", () => {
-  test.each([
+describe.only("main", () => {
+  test.only.each([
     "app1",
-    // "app2" typia does not support pertternProperties, so this test will fail
+    // "app2", // typia does not support pertternProperties, so this test will fail
   ])("should work %s", async (sampleName) => {
-    const dirname = path.dirname(fileURLToPath(import.meta.url));
     const { options: compilerOptions } = ts.parseJsonConfigFileContent(
       ts.readConfigFile(
         path.resolve(__dirname, "../tsconfig.test-app.json"),
         ts.sys.readFile,
       ).config,
       ts.sys,
-      "app1",
+      sampleName,
     );
 
-    const fileName = path.resolve(dirname, `../../samples/${sampleName}.ts`);
+    const fileName = path.resolve(__dirname, `../../samples/${sampleName}.ts`);
     const program = ts.createProgram([fileName], compilerOptions);
 
     const result = generateOpenApiDocs(program, {
