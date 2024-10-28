@@ -49,10 +49,12 @@ export function generateOpenApiDocs<OpenAPI extends "3.0" | "3.1" = "3.1">(
 
 function isHono(type: ts.Type) {
   const sourceFile = type.symbol.valueDeclaration!.getSourceFile();
+  const absolutePath = path.resolve(sourceFile.fileName);
   return (
-    path
-      .resolve(sourceFile.fileName)
-      .endsWith(path.join("hono", "dist", "types", "hono.d.ts")) &&
+    (absolutePath.endsWith(
+      path.join("hono", "dist", "types", "hono-base.d.ts"),
+    ) ||
+      absolutePath.endsWith(path.join("hono", "dist", "types", "hono.d.ts"))) &&
     type.symbol.name === "Hono"
   );
 }
