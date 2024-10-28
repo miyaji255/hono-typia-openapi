@@ -77,7 +77,7 @@ async function main() {
     ? path.resolve(process.cwd(), configFromCli["appFile"])
     : config.appFile;
   config.appType = configFromCli["appType"] || config.appType;
-  config.output = configFromCli["swaggerPath"]
+  config.output = configFromCli["output"]
     ? path.resolve(process.cwd(), configFromCli["output"])
     : config.output;
   config.tsconfig =
