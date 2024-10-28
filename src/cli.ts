@@ -47,20 +47,24 @@ async function main() {
 
   cli.option("-t, --title <title>", "The title of the application");
   cli.option(
-    "-o, --openapi <openapi>",
+    "-O, --openapi <openapi>",
     "The version of the OpenAPI specification. ['3.1', '3.0']",
     {
       default: "3.1",
     },
   );
   cli.option("-d, --description <description>", "The description of the API");
-  cli.option("-V, --app-version <version>", "The version of the API");
+  cli.option("-V, --app-version <appVersion>", "The version of the API", {
+    default: "1.0.0",
+  });
   cli.option("-a, --app-file <appFile>", "The path to the Hono app file");
   cli.option("-n, --app-type <appType>", "Hono app type name", {
     default: "AppType",
   });
-  cli.option("-o, --output <output>", "The path to the output swagger file");
-  cli.option("-t, --tsconfig <tsconfig>", "The path to the tsconfig file");
+  cli.option("-o, --output <output>", "The path to the output swagger file", {
+    default: "openapi.json",
+  });
+  cli.option("--tsconfig <tsconfig>", "The path to the tsconfig file");
   cli.help();
 
   cli.version(packageVersion);
@@ -69,7 +73,12 @@ async function main() {
   if (configFromCli["help"] || configFromCli["version"]) return;
 
   config.title = configFromCli["title"] || config.title;
-  config.openapi = configFromCli["openapi"] || config.openapi;
+  config.openapi =
+    (configFromCli["openapi"] === 3.1
+      ? "3.1"
+      : configFromCli["openapi"] === 3.0
+        ? "3.0"
+        : (`${configFromCli["openapi"]}` as any)) || config.openapi;
   config.description =
     (configFromCli["description"] || config.description) ?? "";
   config.version = configFromCli["appVersion"] || config.version;

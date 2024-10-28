@@ -2,12 +2,16 @@ import ts from "typescript";
 import * as path from "path";
 import type { HtoGenerateOptions } from "./options.js";
 import { analyzeSchema } from "./analyzeSchema.js";
+import { existsSync } from "fs";
 
 /** @internal */
 export function generateOpenApiDocs<OpenAPI extends "3.0" | "3.1" = "3.1">(
   program: ts.Program,
   options: HtoGenerateOptions<OpenAPI>,
 ) {
+  if (!existsSync(options.appFile))
+    throw new Error(`The app file '${options.appFile}' does not found.`);
+
   const checker = program.getTypeChecker();
 
   let honoType: ts.Type | undefined;
@@ -26,7 +30,8 @@ export function generateOpenApiDocs<OpenAPI extends "3.0" | "3.1" = "3.1">(
       ) {
         const type = checker.getTypeAtLocation(node);
         if (!isHono(type)) return undefined;
-        if (honoType !== undefined) throw new Error("Multiple app types found");
+        if (honoType !== undefined)
+          throw new Error("Multiple app types found.");
         honoType = type;
       }
 
@@ -34,7 +39,8 @@ export function generateOpenApiDocs<OpenAPI extends "3.0" | "3.1" = "3.1">(
     },
     undefined,
   );
-  if (honoType === undefined) throw new Error("App type not found");
+  if (honoType === undefined)
+    throw new Error(`The app type '${options.appType}' was not found.`);
 
   const schemaType = checker.getTypeArguments(honoType as ts.TypeReference)[1]!;
 
