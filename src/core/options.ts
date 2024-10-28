@@ -45,6 +45,7 @@ export interface HtoConfig<OpenAPI extends "3.1" | "3.0" = "3.1">
     Partial<Omit<HtoGenerateOptions<OpenAPI>, "title" | "appFile">> {
   /**
    * The path to the output swagger file.
+   * @default "openapi.json"
    */
   output?: string;
 
