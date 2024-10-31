@@ -37,3 +37,12 @@ export function createOpenAPISchema<Version extends "3.0" | "3.1">(
     results.map((r) => (r as { data: Metadata }).data),
   ) as IJsonApplication<Version>;
 }
+
+/** @internal */
+export function isSupportedSchema(type: ts.Type): boolean {
+  return (
+    (type.flags &
+      (ts.TypeFlags.Never | ts.TypeFlags.Undefined | ts.TypeFlags.Null)) ===
+    0
+  );
+}

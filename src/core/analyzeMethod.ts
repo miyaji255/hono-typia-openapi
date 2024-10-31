@@ -7,6 +7,7 @@ import {
 } from "./constants.js";
 import { InvalidTypeError } from "./errors/InvalidTypeError.js";
 import { analyzeParamters } from "./analyzeParameters.js";
+import { isSupportedSchema } from "./createOpenAPISchema.js";
 
 /** @internal */
 export interface MethodSchema {
@@ -60,13 +61,13 @@ export function analyzeMethod(
     method,
     input: {
       json:
-        inputJsonType === undefined
-          ? undefined
-          : schemaTypes.push(inputJsonType) - 1,
+        inputJsonType !== undefined && isSupportedSchema(inputJsonType)
+          ? schemaTypes.push(inputJsonType) - 1
+          : undefined,
       form:
-        inputFormType === undefined
-          ? undefined
-          : schemaTypes.push(inputFormType) - 1,
+        inputFormType !== undefined && isSupportedSchema(inputFormType)
+          ? schemaTypes.push(inputFormType) - 1
+          : undefined,
       parameters: analyzeParamters(checker, {
         query: inputQueryType,
         param: inputPramType,
@@ -76,7 +77,9 @@ export function analyzeMethod(
         in: param.in,
         name: param.name,
         explode: param.explode,
-        type: schemaTypes.push(param.type) - 1,
+        type: isSupportedSchema(param.type)
+          ? schemaTypes.push(param.type) - 1
+          : schemaTypes.push(checker.getStringType()) - 1,
         required: param.required,
       })),
     },
@@ -124,10 +127,16 @@ export function analyzeMethod(
         ? format2mediaType[outputFormatType.value]
         : "text/plain";
 
-    methodSchema.outputs[status ?? "default"] = {
-      type: schemaTypes.push(outputType) - 1,
-      mediaType,
-    };
+    if (isSupportedSchema(outputType)) {
+      methodSchema.outputs[status ?? "default"] = {
+        type: schemaTypes.push(outputType) - 1,
+        mediaType,
+      };
+    } else {
+      methodSchema.outputs[status ?? "default"] = {
+        mediaType,
+      };
+    }
   }
 
   return methodSchema;
