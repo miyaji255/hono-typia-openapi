@@ -7,6 +7,7 @@ describe("main", () => {
   test.each([
     "app1",
     // "app2", // typia does not support pertternProperties, so this test will fail
+    "routes-app",
   ])("should work %s", async (sampleName) => {
     const { options: compilerOptions } = ts.parseJsonConfigFileContent(
       ts.readConfigFile(
