@@ -42,7 +42,7 @@ const unplugin /* #__PURE__ */ = createUnplugin<
       async buildEnd() {
         try {
           const program = watchProgram.getProgram().getProgram();
-          const docs = generateOpenApiDocs(program, config);
+          const docs = await generateOpenApiDocs(program, config);
           await writeFile(config.output, JSON.stringify(docs));
           consola.success("OpenAPI docs generated successfully");
         } catch (e) {
@@ -57,7 +57,7 @@ const unplugin /* #__PURE__ */ = createUnplugin<
         consola.start("Generating OpenAPI docs...");
         try {
           const program = createTsProgram(config);
-          const docs = generateOpenApiDocs(program, config);
+          const docs = await generateOpenApiDocs(program, config);
           await writeFile(config.output, JSON.stringify(docs));
           consola.success("OpenAPI docs generated successfully");
         } catch (e) {

@@ -1,69 +1,73 @@
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 import { createTsTestProgram, getTypeFromSource } from "../test/utils.js";
 import { analyzeParamters } from "./analyzeParameters.js";
 import { InvalidTypeError } from "./errors/InvalidTypeError.js";
+import ts from "typescript";
 
 describe("analyzeParameters", () => {
-  const program = createTsTestProgram([
-    {
-      fileName: "test.ts",
-      code: `
-import { tags } from "typia";
-type Type = {
-  json: { a: string; b: number };
-  form: { c: string; d: number };
-  query: { id: string; page: \`\${number}\`; statuses?: string | string[] };
-  param: { id: \`\${number & tags.Type<"uint32">}\` };
-  header: { token: string };
-  cookie: { session: string };
-}
-`,
-    },
-    {
-      fileName: "only array query.ts",
-      code: "type Type = { query: { statuses: string[] } }",
-    },
-    {
-      fileName: "optional only array query.ts",
-      code: "type Type = { query: { statuses?: string[] } }",
-    },
-    {
-      fileName: "number query.ts",
-      code: "type Type = { query: { id: number } }",
-    },
-    {
-      fileName: "optional param.ts",
-      code: "type Type = { param: { id?: string } }",
-    },
-    {
-      fileName: "array param.ts",
-      code: "type Type = { param: { id: string | string[] } }",
-    },
-    {
-      fileName: "number param.ts",
-      code: "type Type = { param: { id: string | number } }",
-    },
-    {
-      fileName: "number param2.ts",
-      code: "type Type = { param: { id: number } }",
-    },
-    {
-      fileName: "array header.ts",
-      code: "type Type = { header: { token: string | string[] } }",
-    },
-    {
-      fileName: "number header.ts",
-      code: "type Type = { header: { token: string | number } }",
-    },
-    {
-      fileName: "array cookie.ts",
-      code: "type Type = { cookie: { session: string | string[] } }",
-    },
-    {
-      fileName: "number cookie.ts",
-      code: "type Type = { cookie: { session: string | number } }",
-    },
-  ]);
+  let program: ts.Program = null as any;
+  beforeAll(() => {
+    program = createTsTestProgram([
+      {
+        fileName: "test.ts",
+        code: `
+  import { tags } from "typia";
+  type Type = {
+    json: { a: string; b: number };
+    form: { c: string; d: number };
+    query: { id: string; page: \`\${number}\`; statuses?: string | string[] };
+    param: { id: \`\${number & tags.Type<"uint32">}\` };
+    header: { token: string };
+    cookie: { session: string };
+  }
+  `,
+      },
+      {
+        fileName: "only array query.ts",
+        code: "type Type = { query: { statuses: string[] } }",
+      },
+      {
+        fileName: "optional only array query.ts",
+        code: "type Type = { query: { statuses?: string[] } }",
+      },
+      {
+        fileName: "number query.ts",
+        code: "type Type = { query: { id: number } }",
+      },
+      {
+        fileName: "optional param.ts",
+        code: "type Type = { param: { id?: string } }",
+      },
+      {
+        fileName: "array param.ts",
+        code: "type Type = { param: { id: string | string[] } }",
+      },
+      {
+        fileName: "number param.ts",
+        code: "type Type = { param: { id: string | number } }",
+      },
+      {
+        fileName: "number param2.ts",
+        code: "type Type = { param: { id: number } }",
+      },
+      {
+        fileName: "array header.ts",
+        code: "type Type = { header: { token: string | string[] } }",
+      },
+      {
+        fileName: "number header.ts",
+        code: "type Type = { header: { token: string | number } }",
+      },
+      {
+        fileName: "array cookie.ts",
+        code: "type Type = { cookie: { session: string | string[] } }",
+      },
+      {
+        fileName: "number cookie.ts",
+        code: "type Type = { cookie: { session: string | number } }",
+      },
+    ]);
+  });
 
   test("should work", () => {
     const checker = program.getTypeChecker();

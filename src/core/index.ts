@@ -49,14 +49,3 @@ export function createTsWatchProgram<OpenAPI extends "3.0" | "3.1" = "3.1">(
 }
 
 export { generateOpenApiDocs };
-
-// function shouldBePretty(options: ts.CompilerOptions) {
-//   if (!options || typeof options.pretty === "undefined") {
-//     return (
-//       !!ts.sys.writeOutputIsTTY &&
-//       ts.sys.writeOutputIsTTY() &&
-//       !sys.getEnvironmentVariable("NO_COLOR")
-//     );
-//   }
-//   return options.pretty;
-// }

@@ -16,7 +16,7 @@ async function main() {
   const fileName = path.resolve(__dirname, "../samples/app1.ts");
   const program = ts.createProgram([fileName], compilerOptions);
 
-  const result = generateOpenApiDocs(program, {
+  const result = await generateOpenApiDocs(program, {
     title: "app",
     version: "1.0.0",
     description: "",

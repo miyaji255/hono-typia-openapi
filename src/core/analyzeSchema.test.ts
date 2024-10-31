@@ -1,22 +1,25 @@
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 import { createTsTestProgram, getTypeFromSource } from "../test/utils.js";
 import { EXPORT_FOR_TEST } from "./analyzeSchema.js";
 import type { DeeplyPartial } from "../types/deeply.js";
+import ts from "typescript";
 
 const { analyzeSchemaToRoutes } = EXPORT_FOR_TEST;
 
 describe("analyzeSchemaToRoutes", () => {
-  const program = createTsTestProgram([
-    {
-      fileName: "should work.ts",
-      code: `
+  let program: ts.Program = null as any;
+  beforeAll(() => {
+    program = createTsTestProgram([
+      {
+        fileName: "should work.ts",
+        code: `
 interface User {
   readonly id: number & tags.Type<"uint32">;
   name: string;
   age: number & tags.Type<"int32">;
-}
+  }
       
-type Schema = {
+  type Schema = {
   "/api/user": {
     $get: {
       input: {
@@ -25,23 +28,25 @@ type Schema = {
       output: User[];
       outputFormat: "json";
       status: 200;
-    };
+      };
   };
-} & {
+  } & {
   "/api/user/:id{\\d+}": {
     $get: {
       input: {
         param: { id: string; };
-      };
+        };
       output: User;
       outputFormat: "json";
       status: 200;
     };
   };
-}
-`,
-    },
-  ]);
+  }
+  `,
+      },
+    ]);
+  });
+
   test("should work", () => {
     const checker = program.getTypeChecker();
     const type = getTypeFromSource(
