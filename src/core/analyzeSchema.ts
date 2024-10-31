@@ -7,16 +7,25 @@ import {
 import { OpenAPISpec as OpenAPISpecV31 } from "../openapi/OpenApiV31.js";
 import { normalizePath } from "../utils/normalize.js";
 import { format2mediaType, HttpMethod } from "./constants.js";
-import { analyzeMethod } from "./analyzeMethod.js";
+import { analyzeMethod, MethodSchema } from "./analyzeMethod.js";
 import { createOpenAPISchema } from "./createOpenAPISchema.js";
+import { SemVer } from "semver";
 
-/** @internal */
+/**
+ * Analyze the schema and generate OpenAPI document.
+ * @internal
+ **/
 export function analyzeSchema<OpenAPI extends "3.0" | "3.1" = "3.1">(
   checker: ts.TypeChecker,
   schemaType: ts.Type,
   options: Omit<HtoGenerateOptions<OpenAPI>, "appType" | "appFile">,
+  honoVersion: SemVer,
 ): (OpenAPI extends "3.1" ? OpenAPISpecV31 : OpenAPISpecV30) | undefined {
-  const { routes, types } = analyzeSchemaToRoutes(checker, schemaType);
+  const types: ts.Type[] = [];
+  const routes =
+    honoVersion.compare("4.6.5") >= 0
+      ? analyzeUnionSchemaToRoutes(checker, schemaType, types)
+      : analyzeIntercesctionSchemaToRoutes(checker, schemaType, types);
 
   const schema = createOpenAPISchema(options.openapi, checker, types);
 
@@ -89,9 +98,48 @@ export function analyzeSchema<OpenAPI extends "3.0" | "3.1" = "3.1">(
   } as any;
 }
 
-/** @internal */
-function analyzeSchemaToRoutes(checker: ts.TypeChecker, schemaType: ts.Type) {
-  const types: ts.Type[] = [];
+interface Route {
+  path: string;
+  methods: MethodSchema[];
+}
+
+type TypeCollector = ts.Type[];
+
+/**
+ * Analyze the schema and gather routes and types.
+ * Support Hono >= 4.6.5 (Union Schema)
+ *
+ * Hono 4.6.5 has changed the schema structure to use the union type.
+ * https://github.com/honojs/hono/pull/3443
+ * @internal
+ **/
+function analyzeUnionSchemaToRoutes(
+  checker: ts.TypeChecker,
+  schemaType: ts.Type,
+  typeCollector: TypeCollector,
+): Route[] {
+  if (schemaType.isUnion()) {
+    return schemaType.types.flatMap((type) =>
+      analyzeIntercesctionSchemaToRoutes(checker, type, typeCollector),
+    );
+  }
+
+  return analyzeIntercesctionSchemaToRoutes(checker, schemaType, typeCollector);
+}
+
+/**
+ * Analyze the schema and gather routes and types.
+ * Support Hono <= 4.6.4 (Intercection Schema)
+ *
+ * Hono 4.6.5 has changed the schema structure to use the union type.
+ * https://github.com/honojs/hono/pull/3443
+ * @internal
+ **/
+function analyzeIntercesctionSchemaToRoutes(
+  checker: ts.TypeChecker,
+  schemaType: ts.Type,
+  typeCollector: TypeCollector,
+): Route[] {
   const routes = schemaType
     .getApparentProperties()
     .map(({ name: path }) => {
@@ -115,17 +163,23 @@ function analyzeSchemaToRoutes(checker: ts.TypeChecker, schemaType: ts.Type) {
             )
               return null;
 
-            return analyzeMethod(checker, normalizedMethod, methodType, types);
+            return analyzeMethod(
+              checker,
+              normalizedMethod,
+              methodType,
+              typeCollector,
+            );
           })
           .filter((s) => s !== null),
       };
     })
     .filter((s) => s !== null);
 
-  return { routes, types } as const;
+  return routes;
 }
 
 /** @internal */
 export const EXPORT_FOR_TEST = {
-  analyzeSchemaToRoutes,
+  analyzeUnionSchemaToRoutes,
+  analyzeIntercesctionSchemaToRoutes,
 };

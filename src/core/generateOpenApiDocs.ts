@@ -46,7 +46,7 @@ export async function generateOpenApiDocs<
     maybeHonoTypes.map(async ({ type, declarationPath }) => {
       return {
         type,
-        version: checkHono(path.dirname(declarationPath)),
+        version: await checkHono(path.dirname(declarationPath)),
       };
     }),
   );
@@ -60,7 +60,7 @@ export async function generateOpenApiDocs<
     honoTypes[0]!.type as ts.TypeReference,
   )[1]!;
 
-  return analyzeSchema(checker, schemaType, options);
+  return analyzeSchema(checker, schemaType, options, honoTypes[0]!.version!);
 }
 
 /**
@@ -105,10 +105,9 @@ async function checkHono(directory: string): Promise<SemVer | undefined> {
         await readFile(path.join(directory, "package.json"), "utf8"),
       );
       if (packageJson.name === "hono") return parseSemver(packageJson.version)!;
-    } catch {
-      const parent = path.dirname(directory);
-      if (parent === directory) throw new Error("package.json not found");
-      directory = parent;
-    }
+    } catch {}
+    const parent = path.dirname(directory);
+    if (parent === directory) throw new Error("package.json not found");
+    directory = parent;
   }
 }

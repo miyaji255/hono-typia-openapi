@@ -54,6 +54,9 @@ importers:
       hono_45:
         specifier: npm:hono@~4.5.1
         version: hono@4.5.1
+      hono_46:
+        specifier: npm:hono@~4.6.8
+        version: hono@4.6.8
       hono_462:
         specifier: npm:hono@4.6.2
         version: hono@4.6.2
