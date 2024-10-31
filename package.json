@@ -1,6 +1,6 @@
 {
   "name": "hono-typia-openapi",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Open API Schema Generator for Hono with typia",
   "type": "module",
   "sideEffects": false,
