@@ -166,6 +166,7 @@
     "@vitest/coverage-v8": "2.0",
     "hono": "^4.6.8",
     "hono_45": "npm:hono@~4.5.1",
+    "hono_46": "npm:hono@~4.6.8",
     "hono_462": "npm:hono@4.6.2",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",

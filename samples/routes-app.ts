@@ -5,15 +5,17 @@ interface Message {
   message: string & tags.MinLength<10>;
 }
 
-const subsub = new Hono().get("/hello", (c) =>
-  c.json<Message>({ message: "Hello World!" }),
-);
+const subsub = new Hono()
+  .get("/hello", (c) => c.json<Message>({ message: "Hello World!" }))
+  .get("/hello2", (c) => c.json<Message>({ message: "Hello World!" }));
 const sub1 = new Hono()
   .basePath("/sub1")
-  .get("/hello", (c) => c.json<Message>({ message: "Hello World!" }));
+  .get("/hello", (c) => c.json<Message>({ message: "Hello World!" }))
+  .get("/hello2", (c) => c.json<Message>({ message: "Hello World!" }));
 const sub2 = new Hono()
   .basePath("/sub2")
   .get("/hello", (c) => c.json<Message>({ message: "Hello World!" }))
+  .get("/hello2", (c) => c.json<Message>({ message: "Hello World!" }))
   .route("/subsub", subsub);
 
 const app = new Hono().route("/", sub1).route("/", sub2);

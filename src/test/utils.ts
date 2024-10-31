@@ -102,3 +102,22 @@ export function getTypeFromSource(
 
   return checker.getTypeAtLocation(targetNode.type);
 }
+
+export type HonoVersion = "4.5" | "4.6.2" | "4.6";
+export function getVersioningPaths(version: HonoVersion) {
+  const suffix = version.replaceAll(".", "");
+  return {
+    hono: [`./node_modules/hono_${suffix}/dist/types/index.d.ts`],
+    "hono/hono-base": [
+      `./node_modules/hono_${suffix}/dist/types/hono-base.d.ts`,
+    ],
+    "hono/tiny": [`./node_modules/hono_${suffix}/dist/types/preset/tiny.d.ts`],
+    "hono/quick": [
+      `./node_modules/hono_${suffix}/dist/types/preset/quick.d.ts`,
+    ],
+    "hono/types": [`./node_modules/hono_${suffix}/dist/types/types.d.ts`],
+    "hono/http-exception": [
+      `./node_modules/hono_${suffix}/dist/types/http-exception.d.ts`,
+    ],
+  };
+}
