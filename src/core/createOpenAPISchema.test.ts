@@ -1,37 +1,42 @@
 import { describe } from "node:test";
 import { createOpenAPISchema } from "./createOpenAPISchema.js";
-import { expect, test } from "vitest";
+import { beforeAll, expect, test } from "vitest";
 import { createTsTestProgram, getTypeFromSource } from "../test/utils.js";
 import { Type } from "typescript";
 import ts from "typescript";
 import { InvalidTypeError } from "./errors/InvalidTypeError.js";
 
 describe("createOpenAPISchema", () => {
-  const program = createTsTestProgram([
-    {
-      fileName: "should work.ts",
-      code: `
-import { tags } from "typia";
+  let program: ts.Program = null as any;
+
+  beforeAll(() => {
+    program = createTsTestProgram([
+      {
+        fileName: "should work.ts",
+        code: `
+        import { tags } from "typia";
 
 interface User {
   id: number & tags.Type<"uint32">;
   name: string;
   age: number & tags.Type<"int32">;
-}
-
+  }
+  
 type NumberStr = \`\${number}\`;`,
-    },
-    {
-      fileName: "pattern property key.ts",
-      code: `
-import { tags } from "typia";
-
+      },
+      {
+        fileName: "pattern property key.ts",
+        code: `
+      import { tags } from "typia";
+      
 type UUID = string & tags.Format<"uuid">;
 type Type = {
   [prop: UUID]: {};
-};`,
-    },
-  ]);
+  };`,
+      },
+    ]);
+  });
+
   test("should work", () => {
     const checker = program.getTypeChecker();
 

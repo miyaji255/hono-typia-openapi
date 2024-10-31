@@ -17,13 +17,16 @@ importers:
       cosmiconfig:
         specifier: ^9.0.0
         version: 9.0.0(typescript@5.5.3)
+      semver:
+        specifier: ^7.6.3
+        version: 7.6.3
       unplugin:
         specifier: ^1.13.1
         version: 1.13.1
     devDependencies:
       '@hono/typia-validator':
         specifier: ^0.0.5
-        version: 0.0.5(hono@4.5.1)(typia@6.5.4(typescript@5.5.3))
+        version: 0.0.5(hono@4.6.8)(typia@6.5.4(typescript@5.5.3))
       '@ryoppippi/unplugin-typia':
         specifier: ^1.0.6
         version: 1.0.6(@types/node@20.14.11)(rollup@4.22.2)
@@ -33,6 +36,9 @@ importers:
       '@types/node':
         specifier: ^20.14.11
         version: 20.14.11
+      '@types/semver':
+        specifier: ^7.5.8
+        version: 7.5.8
       '@types/ts-expose-internals':
         specifier: npm:ts-expose-internals@5.5.3
         version: ts-expose-internals@5.5.3
@@ -43,8 +49,14 @@ importers:
         specifier: '2.0'
         version: 2.0.5(vitest@2.0.5(@types/node@20.14.11))
       hono:
-        specifier: ^4.5.1
-        version: 4.5.1
+        specifier: ^4.6.8
+        version: 4.6.8
+      hono_45:
+        specifier: npm:hono@~4.5.1
+        version: hono@4.5.1
+      hono_462:
+        specifier: npm:hono@4.6.2
+        version: hono@4.6.2
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
@@ -425,6 +437,9 @@ packages:
   '@types/node@20.14.11':
     resolution: {integrity: sha512-kprQpL8MMeszbz6ojB5/tU8PLN4kesnN8Gjzw349rDlNgsSzg90lAVj3llK99Dh7JON+t9AuscPPFW6mPbTnSA==}
 
+  '@types/semver@7.5.8':
+    resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
+
   '@vitest/coverage-istanbul@2.0.5':
     resolution: {integrity: sha512-BvjWKtp7fiMAeYUD0mO5cuADzn1gmjTm54jm5qUEnh/O08riczun8rI4EtQlg3bWoRo2lT3FO8DmjPDX9ZthPw==}
     peerDependencies:
@@ -762,6 +777,14 @@ packages:
   hono@4.5.1:
     resolution: {integrity: sha512-6q8AugoWG5wlrjdGG8OFFiqEsPlPGjODjUik48sEJeko4Tae1UsLS2vUiYHLEJx1gJvOZa4BWkQC+urwDmkEvQ==}
     engines: {node: '>=16.0.0'}
+
+  hono@4.6.2:
+    resolution: {integrity: sha512-v+39817TgAhetmHUEli8O0uHDmxp2Up3DnhS4oUZXOl5IQ9np9tYtldd42e5zgdLVS0wsOoXQNZ6mx+BGmEvCA==}
+    engines: {node: '>=16.9.0'}
+
+  hono@4.6.8:
+    resolution: {integrity: sha512-f+2Ec9JAzabT61pglDiLJcF/DjiSefZkjCn9bzm1cYLGkD5ExJ3Jnv93ax9h0bn7UPLHF81KktoyjdQfWI2n1Q==}
+    engines: {node: '>=16.9.0'}
 
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
@@ -1561,9 +1584,9 @@ snapshots:
   '@esbuild/win32-x64@0.21.5':
     optional: true
 
-  '@hono/typia-validator@0.0.5(hono@4.5.1)(typia@6.5.4(typescript@5.5.3))':
+  '@hono/typia-validator@0.0.5(hono@4.6.8)(typia@6.5.4(typescript@5.5.3))':
     dependencies:
-      hono: 4.5.1
+      hono: 4.6.8
       typia: 6.5.4(typescript@5.5.3)
 
   '@isaacs/cliui@8.0.2':
@@ -1689,6 +1712,8 @@ snapshots:
   '@types/node@20.14.11':
     dependencies:
       undici-types: 5.26.5
+
+  '@types/semver@7.5.8': {}
 
   '@vitest/coverage-istanbul@2.0.5(vitest@2.0.5(@types/node@20.14.11))':
     dependencies:
@@ -2056,6 +2081,10 @@ snapshots:
       function-bind: 1.1.2
 
   hono@4.5.1: {}
+
+  hono@4.6.2: {}
+
+  hono@4.6.8: {}
 
   html-escaper@2.0.2: {}
 

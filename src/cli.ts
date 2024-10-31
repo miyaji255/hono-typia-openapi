@@ -99,7 +99,7 @@ async function main() {
   consola.start("Generating OpenAPI docs...");
   const program = createTsProgram(config);
 
-  const openAPIDocs = generateOpenApiDocs(program, config);
+  const openAPIDocs = await generateOpenApiDocs(program, config);
   ts.sys.writeFile(config.output, JSON.stringify(openAPIDocs));
 
   consola.success("OpenAPI docs generated successfully");
