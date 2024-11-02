@@ -341,6 +341,7 @@ export interface SchemaObject {
   anyOf?: Array<SchemaObject | ReferenceObject>;
   /** Defines a schema that cannot be satisfied.  */
   not?: SchemaObject | ReferenceObject;
+  pattern?: string;
 }
 
 /**

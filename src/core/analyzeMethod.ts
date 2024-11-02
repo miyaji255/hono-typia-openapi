@@ -8,6 +8,8 @@ import {
 import { InvalidTypeError } from "./errors/InvalidTypeError.js";
 import { analyzeParamters } from "./analyzeParameters.js";
 import { isSupportedSchema } from "./createOpenAPISchema.js";
+import { PathParam } from "./parsePath.js";
+import type { SchemaObject } from "../openapi/OpenApiV31.js";
 
 /** @internal */
 export interface MethodSchema {
@@ -15,13 +17,24 @@ export interface MethodSchema {
   input: {
     json?: number;
     form?: number;
-    parameters: {
-      in: "query" | "path" | "header" | "cookie";
-      name: string;
-      explode: boolean;
-      type: number;
-      required: boolean;
-    }[];
+    parameters: (
+      | {
+          in: "query" | "path" | "header" | "cookie";
+          name: string;
+          explode: boolean;
+          schema?: undefined;
+          type: number;
+          required: boolean;
+        }
+      | {
+          in: "query" | "path" | "header" | "cookie";
+          name: string;
+          explode: boolean;
+          schema: SchemaObject;
+          type?: undefined;
+          required: boolean;
+        }
+    )[];
   };
   /** Key: Status Code */
   outputs: Partial<
@@ -40,6 +53,7 @@ export function analyzeMethod(
   checker: ts.TypeChecker,
   method: HttpMethod,
   methodType: ts.Type,
+  params: readonly PathParam[],
   schemaTypes: ts.Type[],
 ): MethodSchema {
   const responseTypes = methodType.isUnion() ? methodType.types : [methodType];
@@ -68,19 +82,27 @@ export function analyzeMethod(
         inputFormType !== undefined && isSupportedSchema(inputFormType)
           ? schemaTypes.push(inputFormType) - 1
           : undefined,
-      parameters: analyzeParamters(checker, {
-        query: inputQueryType,
-        param: inputPramType,
-        header: inputHeaderType,
-        cookie: inputCookieType,
-      }).map((param) => ({
+      parameters: analyzeParamters(
+        checker,
+        {
+          query: inputQueryType,
+          param: inputPramType,
+          header: inputHeaderType,
+          cookie: inputCookieType,
+        },
+        params,
+      ).map((param) => ({
         in: param.in,
         name: param.name,
         explode: param.explode,
-        type: isSupportedSchema(param.type)
-          ? schemaTypes.push(param.type) - 1
-          : schemaTypes.push(checker.getStringType()) - 1,
         required: param.required,
+        ...(param.type !== undefined && isSupportedSchema(param.type)
+          ? { type: schemaTypes.push(param.type) - 1 }
+          : {
+              schema: param.schema ?? {
+                type: "string",
+              },
+            }),
       })),
     },
     outputs: {},

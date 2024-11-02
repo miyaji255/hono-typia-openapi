@@ -35,7 +35,7 @@ type Schema =
         };
       };
     } & {
-      "/api/user/:id{\\d+}": {
+      "/api/user/:id{\\\\d+}": {
         $get: {
           input: {
             param: { id: string; };
@@ -117,14 +117,17 @@ type Schema =
                   name: "id",
                   explode: false,
                   required: true,
-                  type: 4,
+                  schema: {
+                    type: "string",
+                    pattern: "\\d+",
+                  },
                 },
               ],
             },
             outputs: {
               "200": {
                 mediaType: "application/json",
-                type: 5,
+                type: 4,
               },
             },
           },
@@ -161,7 +164,7 @@ interface User {
       };
   };
   } & {
-  "/api/user/:id{\\d+}": {
+  "/api/user/:id{\\\\d+}": {
     $get: {
       input: {
         param: { id: string; };
@@ -243,14 +246,17 @@ interface User {
                   name: "id",
                   explode: false,
                   required: true,
-                  type: 4,
+                  schema: {
+                    type: "string",
+                    pattern: "\\d+",
+                  },
                 },
               ],
             },
             outputs: {
               "200": {
                 mediaType: "application/json",
-                type: 5,
+                type: 4,
               },
             },
           },

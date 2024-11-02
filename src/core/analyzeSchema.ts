@@ -5,7 +5,7 @@ import {
   PathItemObject,
 } from "../openapi/OpenApiV30.js";
 import { OpenAPISpec as OpenAPISpecV31 } from "../openapi/OpenApiV31.js";
-import { normalizePath } from "../utils/normalize.js";
+import { parsePath } from "./parsePath.js";
 import { format2mediaType, HttpMethod } from "./constants.js";
 import { analyzeMethod, MethodSchema } from "./analyzeMethod.js";
 import { createOpenAPISchema } from "./createOpenAPISchema.js";
@@ -43,7 +43,10 @@ export function analyzeSchema<OpenAPI extends "3.0" | "3.1" = "3.1">(
           name: param.name,
           explode: param.explode,
           required: param.required,
-          schema: schema.schemas[param.type]!,
+          schema:
+            param.type !== undefined
+              ? schema.schemas[param.type]
+              : param.schema,
         }));
 
       if (input.form !== undefined || input.json !== undefined) {
@@ -142,13 +145,12 @@ function analyzeIntercesctionSchemaToRoutes(
 ): Route[] {
   const routes = schemaType
     .getApparentProperties()
-    .map(({ name: path }) => {
+    .flatMap(({ name: path }) => {
       const pathType = checker.getTypeOfPropertyOfType(schemaType, path);
-      if (pathType === undefined) return null;
+      if (pathType === undefined) return [];
 
-      const normalizedPath = normalizePath(path);
-      return {
-        path: normalizedPath,
+      return parsePath(path).map(({ path, params }) => ({
+        path,
         methods: pathType
           .getApparentProperties()
           .map(({ name: method }) => {
@@ -167,13 +169,13 @@ function analyzeIntercesctionSchemaToRoutes(
               checker,
               normalizedMethod,
               methodType,
+              params,
               typeCollector,
             );
           })
-          .filter((s) => s !== null),
-      };
-    })
-    .filter((s) => s !== null);
+          .filter((r) => r !== null),
+      }));
+    });
 
   return routes;
 }
