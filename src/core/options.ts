@@ -55,6 +55,7 @@ export interface HtoConfig<OpenAPI extends "3.1" | "3.0" = "3.1">
   tsconfig?: string;
 }
 
+/* istanbul ignore next -- @preserve */
 /** @internal */
 export const assertConfig: typia.AssertionGuard<
   Required<HtoConfig<"3.1"> | HtoConfig<"3.0">>

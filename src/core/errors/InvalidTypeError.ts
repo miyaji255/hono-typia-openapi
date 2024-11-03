@@ -1,3 +1,4 @@
+/* istanbul ignore next -- @preserve */
 /**
  * Error class for invalid type errors.
  */

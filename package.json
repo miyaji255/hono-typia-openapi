@@ -40,7 +40,8 @@
     "dist/**/*",
     "src/**/*",
     "!*.test.ts",
-    "!src/test/**/*"
+    "!src/test/**/*",
+    "!src/**/__snapshots__/**/*"
   ],
   "exports": {
     ".": {

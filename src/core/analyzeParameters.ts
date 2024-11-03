@@ -1,7 +1,7 @@
 import ts from "typescript";
 import { isOptionalProperty } from "../utils/typescript.js";
 import { InvalidTypeError } from "./errors/InvalidTypeError.js";
-import { PathParam } from "./parsePath.js";
+import { type PathParam } from "./parsePath.js";
 import { type SchemaObject } from "../openapi/OpenApiV31.js";
 
 /** @internal */

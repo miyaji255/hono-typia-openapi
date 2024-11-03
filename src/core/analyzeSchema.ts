@@ -1,15 +1,15 @@
 import ts from "typescript";
-import { HtoGenerateOptions } from "./options.js";
-import {
+import type { HtoGenerateOptions } from "./options.js";
+import type {
   OpenAPISpec as OpenAPISpecV30,
   PathItemObject,
 } from "../openapi/OpenApiV30.js";
-import { OpenAPISpec as OpenAPISpecV31 } from "../openapi/OpenApiV31.js";
+import type { OpenAPISpec as OpenAPISpecV31 } from "../openapi/OpenApiV31.js";
 import { parsePath } from "./parsePath.js";
 import { format2mediaType, HttpMethod } from "./constants.js";
-import { analyzeMethod, MethodSchema } from "./analyzeMethod.js";
+import { analyzeMethod, type MethodSchema } from "./analyzeMethod.js";
 import { createOpenAPISchema } from "./createOpenAPISchema.js";
-import { SemVer } from "semver";
+import type { SemVer } from "semver";
 
 /**
  * Analyze the schema and generate OpenAPI document.
