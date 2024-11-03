@@ -87,13 +87,18 @@ describe("analyzeParameters", () => {
         cookie: checker.getTypeOfPropertyOfType(type, "cookie"),
       },
       [
+        // normal
         { name: "id", optional: false },
+        // regex
         { name: "page", regex: "\\d+", optional: false },
+        // optional
         { name: "status", optional: true },
+        // no schema
+        { name: "noSchema", optional: false },
       ],
     );
 
-    expect(result.length).toBe(8);
+    expect(result.length).toBe(9);
 
     const queries = result.filter((r) => r.in === "query");
     expect(queries.length).toBe(3);
@@ -120,7 +125,7 @@ describe("analyzeParameters", () => {
     }
 
     const params = result.filter((r) => r.in === "path");
-    expect(params.length).toBe(3);
+    expect(params.length).toBe(4);
     expect(params[0]!.name).toBe("id");
     expect(params[0]!.required).toBe(true);
     expect(checker.typeToString(params[0]!.type!)).toBe(
@@ -145,6 +150,16 @@ describe("analyzeParameters", () => {
     expect(checker.typeToString(params[2]!.type!)).toBe("string");
     expect(params[2]!.schema).toBeUndefined();
     expect(params[2]!.explode).toBe(false);
+
+    expect(params[3]).toStrictEqual({
+      in: "path",
+      name: "noSchema",
+      explode: false,
+      schema: {
+        type: "string",
+      },
+      required: true,
+    });
 
     const headers = result.filter((r) => r.in === "header");
     expect(headers.length).toBe(1);
