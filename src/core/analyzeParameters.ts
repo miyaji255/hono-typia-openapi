@@ -1,15 +1,27 @@
 import ts from "typescript";
 import { isOptionalProperty } from "../utils/typescript.js";
 import { InvalidTypeError } from "./errors/InvalidTypeError.js";
+import { PathParam } from "./parsePath.js";
+import { type SchemaObject } from "../openapi/OpenApiV31.js";
 
 /** @internal */
-export interface ParameterSchema {
-  in: "query" | "path" | "header" | "cookie";
-  name: string;
-  explode: boolean;
-  type: ts.Type;
-  required: boolean;
-}
+export type ParameterSchema =
+  | {
+      in: "query" | "path" | "header" | "cookie";
+      name: string;
+      explode: boolean;
+      type: ts.Type;
+      schema?: undefined;
+      required: boolean;
+    }
+  | {
+      in: "query" | "path" | "header" | "cookie";
+      name: string;
+      explode: boolean;
+      type?: undefined;
+      schema: SchemaObject;
+      required: boolean;
+    };
 
 /** @internal */
 export function analyzeParamters(
@@ -20,24 +32,80 @@ export function analyzeParamters(
     header?: ts.Type;
     cookie?: ts.Type;
   },
+  params: readonly PathParam[],
 ): ParameterSchema[] {
   const result: ParameterSchema[] = [];
   if (types.query) {
-    result.push(...createPramterObject(checker, "query", types.query));
+    result.push(...createParameterSchema(checker, "query", types.query));
   }
   if (types.param) {
-    result.push(...createPramterObject(checker, "path", types.param));
+    result.push(...createPathparameterSchema(checker, types.param, params));
   }
   if (types.header) {
-    result.push(...createPramterObject(checker, "header", types.header));
+    result.push(...createParameterSchema(checker, "header", types.header));
   }
   if (types.cookie) {
-    result.push(...createPramterObject(checker, "cookie", types.cookie));
+    result.push(...createParameterSchema(checker, "cookie", types.cookie));
   }
   return result;
 }
 
-function createPramterObject(
+function createPathparameterSchema(
+  checker: ts.TypeChecker,
+  type: ts.Type,
+  params: readonly PathParam[],
+): ParameterSchema[] {
+  return params.map((param) => {
+    if (param.regex !== undefined) {
+      // Preffer Regex Path over Type
+      return {
+        in: "path",
+        name: param.name,
+        explode: false,
+        schema: {
+          type: "string",
+          pattern: param.regex,
+        },
+        required: true,
+      };
+    }
+
+    const elementType = checker.getTypeOfPropertyOfType(type, param.name);
+    if (elementType === undefined)
+      return {
+        in: "path",
+        name: param.name,
+        explode: false,
+        schema: {
+          type: "string",
+        },
+        required: true,
+      };
+
+    const { type: exactType, isArray } = getExactType(checker, elementType);
+    const isOptional = isOptionalProperty(
+      checker.getPropertyOfType(type, param.name)!,
+    );
+
+    if (isOptional && !param.optional)
+      // Allow an optional property, if the path parameter is optional.
+      throw new InvalidTypeError("Path parameter must be required");
+    if (isArray)
+      throw new InvalidTypeError("Path parameter must not be array type");
+    if (!checker.isTypeAssignableTo(exactType, checker.getStringType()))
+      throw new InvalidTypeError("Path parameter must be string type");
+
+    return {
+      in: "path",
+      name: param.name,
+      explode: false,
+      type: exactType,
+      required: true,
+    };
+  });
+}
+
+function createParameterSchema(
   checker: ts.TypeChecker,
   key: "query" | "path" | "header" | "cookie",
   type: ts.Type,
