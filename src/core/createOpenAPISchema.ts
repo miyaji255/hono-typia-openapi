@@ -1,5 +1,5 @@
 import ts from "typescript";
-import { IJsonApplication } from "typia";
+import type { IJsonApplication } from "typia";
 import { MetadataCollection } from "typia/lib/factories/MetadataCollection.js";
 import { MetadataFactory } from "typia/lib/factories/MetadataFactory.js";
 import { JsonApplicationProgrammer } from "typia/lib/programmers/json/JsonApplicationProgrammer.js";

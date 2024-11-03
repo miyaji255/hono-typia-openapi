@@ -2,13 +2,13 @@ import ts from "typescript";
 import {
   format2mediaType,
   HonoFormats,
-  HttpMethod,
-  MediaType,
+  type HttpMethod,
+  type MediaType,
 } from "./constants.js";
 import { InvalidTypeError } from "./errors/InvalidTypeError.js";
 import { analyzeParamters } from "./analyzeParameters.js";
 import { isSupportedSchema } from "./createOpenAPISchema.js";
-import { PathParam } from "./parsePath.js";
+import type { PathParam } from "./parsePath.js";
 import type { SchemaObject } from "../openapi/OpenApiV31.js";
 
 /** @internal */
