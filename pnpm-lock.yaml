@@ -6,7 +6,7 @@ settings:
 
 importers:
 
-  .:
+  packages/hono-typia-openapi:
     dependencies:
       cac:
         specifier: ^6.7.14
@@ -16,7 +16,7 @@ importers:
         version: 3.2.3
       cosmiconfig:
         specifier: ^9.0.0
-        version: 9.0.0(typescript@5.5.3)
+        version: 9.0.0(typescript@5.5.4)
       semver:
         specifier: ^7.6.3
         version: 7.6.3
@@ -26,7 +26,7 @@ importers:
     devDependencies:
       '@hono/typia-validator':
         specifier: ^0.0.5
-        version: 0.0.5(hono@4.6.8)(typia@6.5.4(typescript@5.5.3))
+        version: 0.0.5(hono@4.6.8)(typia@6.10.2(typescript@5.5.4))
       '@ryoppippi/unplugin-typia':
         specifier: ^1.0.6
         version: 1.0.6(@types/node@20.14.11)(rollup@4.22.2)
@@ -74,10 +74,10 @@ importers:
         version: 4.16.2
       typescript:
         specifier: ^5.5.3
-        version: 5.5.3
+        version: 5.5.4
       typia:
         specifier: ^6.5.4
-        version: 6.5.4(typescript@5.5.3)
+        version: 6.10.2(typescript@5.5.4)
       vitest:
         specifier: ^2.0.5
         version: 2.0.5(@types/node@20.14.11)
@@ -427,9 +427,6 @@ packages:
 
   '@ryoppippi/unplugin-typia@1.0.6':
     resolution: {integrity: sha512-jG6/uyYb1wl4qUxZaT+qkVVzDhBCIxZOCCqQS9NAECxy6CpOCuYqCvucDgIvYF51+zaQnPix6pCcr98Dl3oodA==}
-
-  '@samchon/openapi@0.4.9':
-    resolution: {integrity: sha512-mvCHjm6WmfB7ObRukAM7djBTNgOtLrT5M++t530txQg+UaqsaGtLgoZ2WNkULgLtqRWxncjty3tfik4DGveOMQ==}
 
   '@samchon/openapi@1.0.2':
     resolution: {integrity: sha512-+PFmOo3fZ0RejmhMnX+yKZCC2CCSxO6NhdQLnNStcX0JFdyNZk9Z5rrcOu+SDfWOlaMdRqfYzbmfUjpknJCMfA==}
@@ -1046,9 +1043,6 @@ packages:
     resolution: {integrity: sha512-vE7JKRyES09KiunauX7nd2Q9/L7lhok4smP9RZTDeD4MVs72Dp2qNFVz39Nz5a0FVEW0BJR6C0DYrq6unoziZA==}
     engines: {node: '>= 14.16'}
 
-  picocolors@1.0.1:
-    resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
-
   picocolors@1.1.0:
     resolution: {integrity: sha512-TQ92mBOW0l3LeMeyLV6mzy/kWr8lkd/hp3mTg7wYK7zJhuBStmGMBG0BdeDZS/dZx1IukaX6Bk11zcln25o1Aw==}
 
@@ -1251,11 +1245,6 @@ packages:
     resolution: {integrity: sha512-yOGpmOAL7CkKe/91I5O3gPICmJNLJ1G4zFYVAsRHg7M64biSnPtRj0WNQt++bRkjYOqjWXrhnUw1utzmVErAdg==}
     engines: {node: '>=16'}
 
-  typescript@5.5.3:
-    resolution: {integrity: sha512-/hreyEujaB0w76zKo6717l3L0o/qEUtRgdvUBvlkhoWeOVMjMuHNHk0BRBzikzuGDqNmPQbg5ifMEqsHLiIUcQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   typescript@5.5.4:
     resolution: {integrity: sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==}
     engines: {node: '>=14.17'}
@@ -1266,12 +1255,6 @@ packages:
     hasBin: true
     peerDependencies:
       typescript: '>=4.8.0 <5.7.0'
-
-  typia@6.5.4:
-    resolution: {integrity: sha512-4+oiWrLree/AgjiqVaQEOlaVDIKQkbsKmC9Tyhrsk4n7znjP7EHjRX9TIcN0q1ACfGTcwlf+ZBf5qQW/MEPRuw==}
-    hasBin: true
-    peerDependencies:
-      typescript: '>=4.8.0 <5.6.0'
 
   ufo@1.5.4:
     resolution: {integrity: sha512-UsUk3byDzKd04EyoZ7U4DOlxQaD14JUKQl6/P7wiX4FNvUfm3XL246n9W5AmqwW5RSFJ27NAuM0iLscAOYUiGQ==}
@@ -1407,7 +1390,7 @@ snapshots:
   '@babel/code-frame@7.24.7':
     dependencies:
       '@babel/highlight': 7.24.7
-      picocolors: 1.0.1
+      picocolors: 1.1.0
 
   '@babel/compat-data@7.25.4': {}
 
@@ -1486,7 +1469,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.7
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.0.1
+      picocolors: 1.1.0
 
   '@babel/parser@7.25.6':
     dependencies:
@@ -1587,10 +1570,10 @@ snapshots:
   '@esbuild/win32-x64@0.21.5':
     optional: true
 
-  '@hono/typia-validator@0.0.5(hono@4.6.8)(typia@6.5.4(typescript@5.5.3))':
+  '@hono/typia-validator@0.0.5(hono@4.6.8)(typia@6.10.2(typescript@5.5.4))':
     dependencies:
       hono: 4.6.8
-      typia: 6.5.4(typescript@5.5.3)
+      typia: 6.10.2(typescript@5.5.4)
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -1705,8 +1688,6 @@ snapshots:
       - sugarss
       - terser
       - webpack-sources
-
-  '@samchon/openapi@0.4.9': {}
 
   '@samchon/openapi@1.0.2': {}
 
@@ -1912,14 +1893,14 @@ snapshots:
 
   core-util-is@1.0.3: {}
 
-  cosmiconfig@9.0.0(typescript@5.5.3):
+  cosmiconfig@9.0.0(typescript@5.5.4):
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.0
       js-yaml: 4.1.0
       parse-json: 5.2.0
     optionalDependencies:
-      typescript: 5.5.3
+      typescript: 5.5.4
 
   cross-spawn@7.0.3:
     dependencies:
@@ -2342,8 +2323,6 @@ snapshots:
 
   pathval@2.0.0: {}
 
-  picocolors@1.0.1: {}
-
   picocolors@1.1.0: {}
 
   picomatch@2.3.1: {}
@@ -2537,8 +2516,6 @@ snapshots:
 
   type-fest@4.26.1: {}
 
-  typescript@5.5.3: {}
-
   typescript@5.5.4: {}
 
   typia@6.10.2(typescript@5.5.4):
@@ -2550,15 +2527,6 @@ snapshots:
       package-manager-detector: 0.2.0
       randexp: 0.5.3
       typescript: 5.5.4
-
-  typia@6.5.4(typescript@5.5.3):
-    dependencies:
-      '@samchon/openapi': 0.4.9
-      commander: 10.0.1
-      comment-json: 4.2.4
-      inquirer: 8.2.6
-      randexp: 0.5.3
-      typescript: 5.5.3
 
   ufo@1.5.4: {}
 
