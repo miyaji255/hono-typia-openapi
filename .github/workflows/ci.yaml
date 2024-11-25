@@ -23,7 +23,7 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install
-      - run: pnpm run build
+      - run: pnpm run -r build
   lint:
     runs-on: ubuntu-22.04
     timeout-minutes: 5
@@ -37,7 +37,7 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install
-      - run: pnpm run lint
+      - run: pnpm run -r lint
   test:
     runs-on: ubuntu-22.04
     timeout-minutes: 5
@@ -51,8 +51,9 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install
-      - run: pnpm run test
+      - run: pnpm run -r test
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          directory: packages/hono-typia-openapi/coverage
