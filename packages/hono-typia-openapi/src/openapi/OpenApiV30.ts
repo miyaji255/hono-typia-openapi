@@ -426,7 +426,7 @@ export interface SchemaObject {
   /** The minimum number of properties in an object. */
   minProperties?: number;
   /** Examples for the schema. */
-  examples?: any[];
+  examples?: any;
   /** Adds support for polymorphism. */
   discriminator?: DiscriminatorObject;
   /** Indicates if the schema is read-only. */

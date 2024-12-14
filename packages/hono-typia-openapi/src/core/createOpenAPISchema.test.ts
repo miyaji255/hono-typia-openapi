@@ -67,7 +67,6 @@ type Type = {
       components: {
         schemas: {
           User: {
-            nullable: false,
             properties: {
               age: {
                 type: "integer",

@@ -1,8 +1,7 @@
 import ts from "typescript";
-import type { IJsonApplication } from "typia";
 import { MetadataCollection } from "typia/lib/factories/MetadataCollection.js";
 import { MetadataFactory } from "typia/lib/factories/MetadataFactory.js";
-import { JsonApplicationProgrammer } from "typia/lib/programmers/json/JsonApplicationProgrammer.js";
+import { JsonSchemasProgrammer } from "typia/lib/programmers/json/JsonSchemasProgrammer.js";
 import type { Metadata } from "typia/lib/schemas/metadata/Metadata.js";
 
 /** @internal */
@@ -16,12 +15,18 @@ export function createOpenAPISchema<Version extends "3.0" | "3.1">(
   });
 
   const results = types.map((t) =>
-    MetadataFactory.analyze(checker)({
-      escape: true,
-      constant: true,
-      absorb: false,
-      validate: JsonApplicationProgrammer.validate,
-    })(collection)(t),
+    MetadataFactory.analyze({
+      checker,
+      transformer: undefined,
+      options: {
+        escape: true,
+        constant: true,
+        absorb: false,
+        validate: JsonSchemasProgrammer.validate,
+      },
+      collection,
+      type: t,
+    }),
   );
   if (results.some((r) => !r.success)) {
     throw new Error(
@@ -33,9 +38,10 @@ export function createOpenAPISchema<Version extends "3.0" | "3.1">(
     );
   }
 
-  return JsonApplicationProgrammer.write(openapiVersion)(
-    results.map((r) => (r as { data: Metadata }).data),
-  ) as IJsonApplication<Version>;
+  return JsonSchemasProgrammer.write({
+    version: openapiVersion,
+    metadatas: results.map((r) => (r as { data: Metadata }).data),
+  });
 }
 
 /** @internal */

@@ -27,7 +27,7 @@ export function analyzeSchema<OpenAPI extends "3.0" | "3.1" = "3.1">(
       ? analyzeUnionSchemaToRoutes(checker, schemaType, types)
       : analyzeIntercesctionSchemaToRoutes(checker, schemaType, types);
 
-  const schema = createOpenAPISchema(options.openapi, checker, types);
+  const schema = createOpenAPISchema<OpenAPI>(options.openapi, checker, types);
 
   const paths: Record<string, PathItemObject> = {};
   for (const { path, methods } of routes) {
