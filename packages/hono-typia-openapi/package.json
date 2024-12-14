@@ -147,7 +147,7 @@
   },
   "peerDependencies": {
     "hono": "^4.5.1D",
-    "typia": "^6.5.4"
+    "typia": "^7.0.0"
   },
   "dependencies": {
     "cac": "^6.7.14",
@@ -159,7 +159,7 @@
   "devDependencies": {
     "@hono/typia-validator": "^0.0.5",
     "@ryoppippi/unplugin-typia": "^1.0.6",
-    "@samchon/openapi": "^1.0.2",
+    "@samchon/openapi": "^2.1.2",
     "@types/node": "^20.14.11",
     "@types/semver": "^7.5.8",
     "@types/ts-expose-internals": "npm:ts-expose-internals@5.5.3",
@@ -174,7 +174,7 @@
     "ts-patch": "^3.2.1",
     "tsx": "^4.16.2",
     "typescript": "^5.5.3",
-    "typia": "^6.5.4",
+    "typia": "^7.0.0",
     "vitest": "^2.0.5"
   }
 }
